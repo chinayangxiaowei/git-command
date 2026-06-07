@@ -21,7 +21,35 @@ slug() {
 }
 
 main() {
-  echo "main() not implemented yet"
+  set -euo pipefail
+  local DIR
+  DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  # shellcheck source=/dev/null
+  source "$DIR/lib.sh"
+
+  local purpose="${1:?usage: $0 <purpose> <SHA>}"
+  local sha_in="${2:?usage: $0 <purpose> <SHA>}"
+
+  case "$purpose" in
+    review|try|fix|feat|hot) ;;
+    *) echo "invalid purpose: $purpose (need: review/try/fix/feat/hot)" >&2; exit 1 ;;
+  esac
+
+  require_bare_layout
+
+  local SHA
+  if ! SHA=$(git rev-parse --verify "${sha_in}^{commit}" 2>/dev/null); then
+    echo "invalid SHA: $sha_in" >&2
+    exit 1
+  fi
+
+  show_intro "worktree-from（$purpose）" \
+    "作用: 从此 commit 在新 worktree 检出（按 purpose 分组）" \
+    "purpose: $purpose"
+  print_header "$SHA"
+
+  # 后续 Task 实现各 purpose 子流程
+  echo "TODO: implement $purpose flow" >&2
   exit 1
 }
 

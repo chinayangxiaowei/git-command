@@ -80,6 +80,24 @@ SHA3=$(git rev-parse HEAD)    # feat(payment): add stripe
 # 占位断言（下个 Task 实现真测试）
 assert_eq "ok" "ok" "sandbox 建好"
 
+SCRIPT_BIN="bash $SCRIPT"
+
+# bad purpose → exit 1，stderr 包含 "invalid purpose"
+out=$($SCRIPT_BIN badpurpose "$SHA1" 2>&1) && ec=0 || ec=$?
+if echo "$out" | grep -q "invalid purpose"; then
+  pass=$((pass+1)); echo "  ✓ bad purpose 报正确错误"
+else
+  fail=$((fail+1)); echo "  ✗ bad purpose 错误信息不对 (ec=$ec)"
+fi
+
+# bad SHA → exit 1
+out=$($SCRIPT_BIN review notasha 2>&1) && ec=0 || ec=$?
+if [ "$ec" -ne 0 ]; then
+  pass=$((pass+1)); echo "  ✓ bad SHA 退出非 0"
+else
+  fail=$((fail+1)); echo "  ✗ bad SHA 应退出非 0"
+fi
+
 teardown_sandbox "$SB"
 cd "$DIR"
 
