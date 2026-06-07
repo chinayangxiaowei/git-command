@@ -252,5 +252,49 @@
     "args": ["__GIT_COMMAND_DIR__/stash-pop.sh"],
     "tags": ["git-command"],
     "reveal": "always"
+  },
+
+  {
+    "label": "──── 9. Worktree（在新目录检出此 commit）────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Worktree · review  (detached, 看代码)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "review", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · try     (临时分支，试错用)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "try", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · fix     (修 bug)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "fix", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · feat    (新功能)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "feat", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · hot     (hotfix)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "hot", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
   }
 ]
