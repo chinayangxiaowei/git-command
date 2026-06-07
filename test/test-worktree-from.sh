@@ -162,6 +162,14 @@ if [ -d "$SB/$fix_path" ]; then
   fi
 fi
 
+# 冲突：再跑同一 review SHA → 报路径冲突
+out=$($SCRIPT_BIN review "$SHA1" 2>&1) && ec=0 || ec=$?
+if echo "$out" | grep -q "路径已存在"; then
+  pass=$((pass+1)); echo "  ✓ 路径冲突检测"
+else
+  fail=$((fail+1)); echo "  ✗ 路径冲突未检测 ec=$ec"
+fi
+
 teardown_sandbox "$SB"
 cd "$DIR"
 
