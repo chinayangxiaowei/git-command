@@ -1,0 +1,256 @@
+[
+  {
+    "label": "──── 1. 查看 / 浏览 ────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · 包含此提交的分支  ($ZED_GIT_SHA_SHORT)",
+    "command": "git",
+    "args": ["--no-pager", "branch", "-a", "--contains", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 包含此提交的 tag  ($ZED_GIT_SHA_SHORT)",
+    "command": "git",
+    "args": ["--no-pager", "tag", "--contains", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 此提交概览 (stat)  ($ZED_GIT_SHA_SHORT)",
+    "command": "git",
+    "args": ["--no-pager", "show", "--stat", "--pretty=fuller", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 此提交完整 diff  ($ZED_GIT_SHA_SHORT)",
+    "command": "git",
+    "args": ["--no-pager", "show", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 与 HEAD 对比  ($ZED_GIT_SHA_SHORT..HEAD)",
+    "command": "git",
+    "args": ["--no-pager", "diff", "$ZED_GIT_SHA..HEAD"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 在 Zed 中打开此提交涉及的所有文件  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/open-files.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "no_focus",
+    "hide": "on_success"
+  },
+  {
+    "label": "Git · 导出此提交涉及的文件到文件夹（快照）  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/export-commit-files.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 导出此提交向前 N 条为补丁文件  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/export-patches.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+
+  {
+    "label": "──── 2. 修改此 commit ────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · 重写此提交的 message  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/reword.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 编辑此提交（改 message / 新增-删除文件）  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/edit-commit.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+
+  {
+    "label": "──── 3. 历史重写（rebase 类）────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · 从此提交向前 N 条合并 (squash)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/squash-n.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 从历史中删除此 commit (drop)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/drop-commit.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 交互式 rebase 到此提交之前  ($ZED_GIT_SHA_SHORT^)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/rebase-i.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 软重置到此提交（改动入暂存区）  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/reset-soft.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 硬重置到此提交（destructive）  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/reset-hard.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+
+  {
+    "label": "──── 4. 把改动合进此 commit (fixup 类) ────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · 把工作区/暂存区改动并入此提交 (fixup+autosquash)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/fixup.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 把此 commit 折叠进某个祖先 commit (commit→fixup)  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/commit-fixup-into.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+
+  {
+    "label": "──── 5. 复制 / 撤销 ────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · Cherry-pick 到当前分支  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/cherry-pick.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · Revert 此提交  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/revert.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+
+  {
+    "label": "──── 6. 分支 ────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · 从此提交创建新分支  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/branch-from.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 从此提交起临时分支测试  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/try-branch.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 把分支 A rebase 到分支 B 上 (CLion 风格)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/rebase-branch-onto.sh"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+
+  {
+    "label": "──── 7. Tag ────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · 给此提交打 tag  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/tag.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · 删除 tag（本地+可选远端）  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/tag-delete.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+
+  {
+    "label": "──── 8. Stash ────",
+    "command": "true",
+    "args": [],
+    "tags": ["git-command"],
+    "reveal": "never",
+    "hide": "always"
+  },
+  {
+    "label": "Git · Stash 当前改动（带名字）",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/stash-push.sh"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Git · Pop 最近的 stash",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/stash-pop.sh"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  }
+]
