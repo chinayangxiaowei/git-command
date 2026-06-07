@@ -79,7 +79,7 @@ project/
 
 好处：feature 分支可以并行检出到 `feature-x/` 等多个 worktree，互不干扰。
 
-新建一个该布局的项目，跑独立工具：`bash <路径>/init-bare-tree.sh <name> [<clone-url>]`（sync-tasks.sh 已经把它部署到 `~/.config/zed/git-command/`；可以 symlink 到 PATH 方便调用）。
+新建一个该布局的项目，跑 `init-bare-tree <name> [<clone-url>]`。如果 `~/.local/bin/` 在你的 PATH 里，`sync-tasks.sh` 会自动 symlink 过去；否则它会打印一行 `ln` 命令让你手动装。
 
 ## 开发者注意
 

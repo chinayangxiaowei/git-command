@@ -87,5 +87,22 @@ echo "✓ Synced $copied scripts   → $TARGET_DIR"
 echo "✓ Message pack [$LANG_CHOICE] → $TARGET_DIR/lang.sh"
 echo "✓ Substituted $label_count menu labels → tasks.json"
 echo "✓ Rendered tasks.json     → $ZED_TASKS"
+
+# Best-effort: expose init-bare-tree as a CLI command so users can run
+# `init-bare-tree foo` from any directory. We only symlink into an
+# existing PATH-on directory; we never create one.
+BIN_DIR="${BIN_DIR:-$HOME/.local/bin}"
+in_path=0
+case ":$PATH:" in
+  *":$BIN_DIR:"*) in_path=1 ;;
+esac
+if [ -d "$BIN_DIR" ] && [ "$in_path" = 1 ]; then
+  ln -sf "$TARGET_DIR/init-bare-tree.sh" "$BIN_DIR/init-bare-tree"
+  echo "✓ Linked   init-bare-tree  → $BIN_DIR/init-bare-tree  (in PATH)"
+else
+  echo "ℹ  Tip: expose init-bare-tree as a CLI command (one-time):"
+  echo "     ln -sf \"$TARGET_DIR/init-bare-tree.sh\" ~/.local/bin/init-bare-tree   # ensure ~/.local/bin is in PATH"
+fi
+
 echo
 echo "Next: in Zed, Cmd+Shift+P → 'reload window' to activate."

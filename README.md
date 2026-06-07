@@ -77,7 +77,7 @@ project/
 
 Benefits: feature branches can be checked out into sibling worktrees (`feature-x/`, etc.) in parallel without disturbing each other. The worktree menu category lives on top of this layout (`require_bare_layout` gates it).
 
-To bootstrap a new project in this layout, run the standalone helper: `bash <path>/init-bare-tree.sh <name> [<clone-url>]` (sync-tasks.sh deploys it to `~/.config/zed/git-command/`; symlink it into your PATH for convenience).
+To bootstrap a new project in this layout, run `init-bare-tree <name> [<clone-url>]`. `sync-tasks.sh` symlinks the helper into `~/.local/bin/` automatically when that directory is on your PATH (otherwise it prints the one-line `ln` command to do it yourself).
 
 ## Notes for Contributors
 
