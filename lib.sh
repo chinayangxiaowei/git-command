@@ -53,7 +53,7 @@ confirm() {
 }
 
 # 拒绝在已有未完成的 rebase/cherry-pick/revert/merge 状态下运行
-ensure_clean_state() {
+require_clean_state() {
   local gitdir in_progress="" hint=""
   gitdir="$(git rev-parse --git-dir)"
   if [ -d "$gitdir/rebase-merge" ] || [ -d "$gitdir/rebase-apply" ]; then
@@ -87,7 +87,7 @@ run_or_abort() {
 # 注册信号回滚（EXIT 和 INT trap 在文件底部已经自动注册了，这里只处理 TERM/HUP）
 # INT 由 _lib_handle_int 智能处理（idle Ctrl+C → exit 0；mid-op Ctrl+C → exit 130
 # 让 EXIT trap 走 abort 分支）。这里不再覆盖 INT，否则改历史的脚本会丢失智能判断。
-# 用法：enable_failure_rollback   # 在 ensure_clean_state 之后调用一次
+# 用法：enable_failure_rollback   # 在 require_clean_state 之后调用一次
 enable_failure_rollback() {
   trap 'exit 143' TERM  # kill / Zed 关 task
   trap 'exit 129' HUP   # 终端 / pane 关闭

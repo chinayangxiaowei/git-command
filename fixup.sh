@@ -10,7 +10,7 @@ show_intro "$MSG_FIXUP_TITLE" \
   "$MSG_FIXUP_PREREQ"
 
 print_header "$SHA"
-ensure_clean_state
+require_clean_state
 enable_failure_rollback
 
 if ! git merge-base --is-ancestor "$SHA" HEAD; then

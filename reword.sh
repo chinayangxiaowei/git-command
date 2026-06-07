@@ -10,7 +10,7 @@ show_intro "$MSG_REWORD_TITLE" \
   "$MSG_REWORD_CONTRAST"
 
 print_header "$SHA"
-ensure_clean_state
+require_clean_state
 enable_failure_rollback
 
 if ! git diff --quiet || ! git diff --cached --quiet; then

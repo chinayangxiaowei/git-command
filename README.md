@@ -66,7 +66,7 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh zh
 
 Every script that sources `lib.sh` automatically gets:
 
-- **`ensure_clean_state`** — refuses to start if a rebase / cherry-pick / revert / merge is already in progress (prevents stacking mid-op state on top of mid-op state)
+- **`require_clean_state`** — refuses to start if a rebase / cherry-pick / revert / merge is already in progress (prevents stacking mid-op state on top of mid-op state)
 - **EXIT trap auto-rollback** — registered at the top of `lib.sh` for *every* script. On non-zero exit it inspects the git directory; if a rebase-like state is detected it runs `git <kind> --abort` and prints a clear "auto-rolled back" message
 - **Smart SIGINT handler** — also registered at the top of `lib.sh`. Ctrl+C is routed by current git state:
   - **mid-op** (`rebase-merge` / `CHERRY_PICK_HEAD` / `REVERT_HEAD` / `MERGE_HEAD` present) → exit 130 → EXIT trap aborts the operation
@@ -107,8 +107,8 @@ To bootstrap a new project in this layout, run `init-bare-tree <name> [<clone-ur
 ## Notes for Contributors
 
 - Target shell is macOS's stock **bash 3.2.57**. Avoid bash 4+ features (`mapfile`, `${var^}` / `${var,}`, associative arrays).
-- New scripts should `source lib.sh` and reuse its helpers: `show_intro` / `print_header` / `confirm` / `ensure_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout` / `wait_to_close` / `copy_to_clipboard` / `maybe_open_in_zed`.
-- History-rewriting scripts add `ensure_clean_state` + `enable_failure_rollback` near the top. The EXIT trap is registered globally by `lib.sh` itself, so the wait-to-close + abort-on-failure behavior is automatic.
+- New scripts should `source lib.sh` and reuse its helpers: `show_intro` / `print_header` / `confirm` / `require_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout` / `wait_to_close` / `copy_to_clipboard` / `maybe_open_in_zed`.
+- History-rewriting scripts add `require_clean_state` + `enable_failure_rollback` near the top. The EXIT trap is registered globally by `lib.sh` itself, so the wait-to-close + abort-on-failure behavior is automatic.
 - Side-effect-only scripts (clipboard, opens-in-editor) should `export GIT_COMMAND_NO_PAUSE=1` near the top to skip the closing prompt — there's no terminal output worth reading.
 - All user-visible strings live in `lang/<code>.sh` (runtime messages, `MSG_*`) and `lang/labels-<code>.sh` (menu labels, `LABEL_*`). Adding a new language: copy `lang/en.sh` + `lang/labels-en.sh`, translate, then `./test/verify-translations.sh` will catch dropped variables or `%s/%d` mismatches.
 
@@ -116,7 +116,7 @@ To bootstrap a new project in this layout, run `init-bare-tree <name> [<clone-ur
 
 ```bash
 bash test/test-all.sh                # 42 assertions — happy path + boundaries across 8 scripts
-bash test/test-rollback.sh           # 10 assertions — EXIT trap / auto-abort / ensure_clean_state
+bash test/test-rollback.sh           # 10 assertions — EXIT trap / auto-abort / require_clean_state
 bash test/test-chains.sh             # 12 assertions — branch / worktree / stash chained workflows
 bash test/test-edge.sh               #  9 assertions — VIEW wrappers / detached HEAD / empty commit / CJK+emoji slug
 bash test/test-history-rewrite.sh    # 19 assertions — all 12 history-rewriting scripts

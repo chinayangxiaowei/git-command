@@ -10,7 +10,7 @@ show_intro "$MSG_RBO_TITLE" \
   "$MSG_RBO_WHEN" \
   "$MSG_RBO_NOTE"
 
-ensure_clean_state
+require_clean_state
 enable_failure_rollback
 
 if ! git diff --quiet || ! git diff --cached --quiet; then

@@ -78,7 +78,7 @@ show_intro "$MSG_EDIT_COMMIT_TITLE" \
   "$MSG_EDIT_COMMIT_NOT_SUITED"
 
 print_header "$SHA"
-ensure_clean_state
+require_clean_state
 enable_failure_rollback
 
 HEAD_SHA="$(git rev-parse HEAD)"

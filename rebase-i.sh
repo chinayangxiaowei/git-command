@@ -10,7 +10,7 @@ show_intro "$MSG_REBASE_I_TITLE" \
   "$MSG_REBASE_I_PREREQ"
 
 print_header "$SHA"
-ensure_clean_state
+require_clean_state
 enable_failure_rollback
 
 printf "$MSG_REBASE_I_RANGE_FMT" "$SHA"

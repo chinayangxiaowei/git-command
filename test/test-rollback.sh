@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # test/test-rollback.sh — exercise lib.sh safety guarantees:
-#   - ensure_clean_state refuses to start during rebase/cherry-pick/revert/merge
+#   - require_clean_state refuses to start during rebase/cherry-pick/revert/merge
 #   - run_or_abort calls --abort on command failure
 #   - _lib_cleanup_on_exit calls --abort when rc != 0 and a rebase-like state is present
 #   - _GIT_CMD_DONE=1 short-circuits the EXIT trap (no spurious abort during wait)
@@ -81,10 +81,10 @@ else
 fi
 
 # ───────────────────────────────────────────────────────────────
-# C. ensure_clean_state — refuses to start during rebase
+# C. require_clean_state — refuses to start during rebase
 # ───────────────────────────────────────────────────────────────
 echo
-echo "── C. ensure_clean_state refuses mid-op ──"
+echo "── C. require_clean_state refuses mid-op ──"
 mkdir -p "$GDIR/rebase-merge"; touch "$GDIR/rebase-merge/orig-head"
 out=$(bash "$DIR/cherry-pick.sh" "$SHA_B" 2>&1) && ec=0 || ec=$?
 [ "$ec" -ne 0 ] && echo "$out" | grep -qE "(unfinished|未完成的)" \

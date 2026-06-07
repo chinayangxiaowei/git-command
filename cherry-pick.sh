@@ -10,7 +10,7 @@ show_intro "$MSG_CHERRY_PICK_TITLE" \
   "$MSG_CHERRY_PICK_NOTE"
 
 print_header "$SHA"
-ensure_clean_state
+require_clean_state
 enable_failure_rollback
 
 current="$(git rev-parse --abbrev-ref HEAD)"
