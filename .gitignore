@@ -1,2 +1,5 @@
 # 设计稿 / brainstorming spec 是过程性文档，留在本地，不入仓库
 docs/
+
+# 语言包同步产物（sync-tasks.sh 拷贝 lang/<lang>.sh → lang.sh，不入仓库）
+lang.sh

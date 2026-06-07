@@ -2,6 +2,21 @@
 # 公共工具：脚本被 source，不直接执行
 # shellcheck shell=bash
 
+# ── 加载语言包 ────────────────────────────────────────────────────
+# 部署后：sync-tasks.sh 把 lang/<lang>.sh 拷贝并改名为 lang.sh
+# 开发时：源码目录里没有 lang.sh，fallback 到 lang/en.sh
+_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$_LIB_DIR/lang.sh" ]; then
+  # shellcheck source=/dev/null
+  source "$_LIB_DIR/lang.sh"
+elif [ -f "$_LIB_DIR/lang/en.sh" ]; then
+  # shellcheck source=/dev/null
+  source "$_LIB_DIR/lang/en.sh"
+else
+  echo "lib.sh: 找不到语言包（lang.sh 或 lang/en.sh）" >&2
+  exit 1
+fi
+
 # 命令头：展示用法 + 场景
 # 用法: show_intro "命令名" "作用: ..." "场景: ..." ["注意: ..."]
 show_intro() {
