@@ -64,7 +64,7 @@ ensure_clean_state() {
     in_progress="merge"; hint="git merge --abort"
   fi
   if [ -n "$in_progress" ]; then
-    echo "已有未完成的 ${in_progress}。先 ${hint} 或 --continue 处理掉再试。" >&2
+    printf "$MSG_LIB_IN_PROGRESS_FMT" "$in_progress" "$hint" >&2
     exit 1
   fi
 }
@@ -76,7 +76,7 @@ run_or_abort() {
   local kind="$1"; shift
   if ! "$@"; then
     echo >&2
-    echo "$kind 失败，自动 git $kind --abort（你的工作区已回滚到操作前）。" >&2
+    printf "$MSG_LIB_RUN_OR_ABORT_FMT" "$kind" "$kind" >&2
     git "$kind" --abort 2>/dev/null || true
     exit 1
   fi
@@ -102,18 +102,16 @@ require_bare_layout() {
   local root
   root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
   if [ -z "$root" ]; then
-    echo "不在 git repo 内。" >&2
+    echo "$MSG_LIB_NOT_IN_REPO" >&2
     exit 1
   fi
-  # 容器根（bare 布局下 = .bare 的父目录）
   local container
-  container="$(cd "$root" && cd .. && pwd)"  # worktree 所在的容器目录候选
-  # bare 布局的特征：容器目录里有 .bare/ + .git 文件指向 .bare
+  container="$(cd "$root" && cd .. && pwd)"
   if [ ! -d "$container/.bare" ] || [ ! -f "$container/.git" ] || \
      ! grep -q 'gitdir:.*\.bare' "$container/.git" 2>/dev/null; then
-    echo "当前不在 bare + worktrees 布局下，worktree 菜单已禁用。" >&2
-    echo "如需启用，新项目用：bash git-command/init-bare-tree.sh <name> [<url>]" >&2
-    echo "已有项目用 migrate-to-bare-tree.sh（暂未实现，先手动迁移）。" >&2
+    echo "$MSG_LIB_NOT_BARE_LAYOUT" >&2
+    echo "$MSG_LIB_INIT_HINT" >&2
+    echo "$MSG_LIB_MIGRATE_HINT" >&2
     exit 1
   fi
 }
@@ -144,7 +142,7 @@ _lib_cleanup_on_exit() {
 
     if [ -n "$kind" ]; then
       echo >&2
-      echo "脚本异常退出 (exit $rc)，自动 git $kind --abort 回滚到操作前。" >&2
+      printf "$MSG_LIB_CLEANUP_FMT" "$rc" "$kind" >&2
       git "$kind" --abort 2>/dev/null || true
     fi
   fi

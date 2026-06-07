@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
-# 同步 git-command 脚本与 Zed tasks 配置
+# Sync git-command scripts and Zed tasks configuration.
 #
-# 默认行为：
-#   - 把所有 *.sh（不含本文件）拷到 ~/.config/zed/git-command/
-#   - 把选定语言包 lang/<lang>.sh 拷到 ~/.config/zed/git-command/lang.sh
-#   - 把 tasks.json 里的 __GIT_COMMAND_DIR__ 占位符替换成上面的目录
-#     渲染后的结果写到 ~/.config/zed/tasks.json
+# What it does:
+#   - Copies every *.sh (excluding self) to ~/.config/zed/git-command/
+#   - Copies the chosen lang/<lang>.sh    to .../lang.sh   (script messages)
+#   - Renders tasks.json by substituting __GIT_COMMAND_DIR__ and every
+#     __LABEL_*__ placeholder, writing the result to ~/.config/zed/tasks.json
 #
-# 用法：
-#   ./sync-tasks.sh            # 默认 en
+# Usage:
+#   ./sync-tasks.sh            # defaults to en
 #   ./sync-tasks.sh en
 #   ./sync-tasks.sh zh
 #   TARGET_DIR=~/bin/git-command ./sync-tasks.sh zh
 #
-# 环境变量：
-#   TARGET_DIR  脚本安装目录   默认 $HOME/.config/zed/git-command
-#   ZED_CONFIG  Zed 配置目录   默认 $HOME/.config/zed
+# Env vars:
+#   TARGET_DIR  script install dir   default $HOME/.config/zed/git-command
+#   ZED_CONFIG  Zed config dir       default $HOME/.config/zed
 
 set -euo pipefail
 
@@ -25,16 +25,21 @@ TARGET_DIR="${TARGET_DIR:-$HOME/.config/zed/git-command}"
 ZED_CONFIG="${ZED_CONFIG:-$HOME/.config/zed}"
 ZED_TASKS="$ZED_CONFIG/tasks.json"
 SELF_NAME="$(basename "${BASH_SOURCE[0]}")"
-LANG_SRC="$REPO_DIR/lang/${LANG_CHOICE}.sh"
+MSG_SRC="$REPO_DIR/lang/${LANG_CHOICE}.sh"
+LABELS_SRC="$REPO_DIR/lang/labels-${LANG_CHOICE}.sh"
 
-if [ ! -f "$LANG_SRC" ]; then
-  echo "✗ 找不到语言包: $LANG_SRC" >&2
-  echo "  可用语言: $(cd "$REPO_DIR/lang" 2>/dev/null && ls *.sh 2>/dev/null | sed 's/\.sh$//' | tr '\n' ' ')" >&2
+if [ ! -f "$MSG_SRC" ]; then
+  echo "✗ Script message pack not found: $MSG_SRC" >&2
+  echo "  Available: $(cd "$REPO_DIR/lang" 2>/dev/null && ls [a-z][a-z].sh 2>/dev/null | sed 's/\.sh$//' | tr '\n' ' ')" >&2
+  exit 1
+fi
+if [ ! -f "$LABELS_SRC" ]; then
+  echo "✗ Menu-label pack not found: $LABELS_SRC" >&2
   exit 1
 fi
 
 if [ ! -f "$REPO_DIR/tasks.json" ]; then
-  echo "✗ 找不到 $REPO_DIR/tasks.json" >&2
+  echo "✗ Not found: $REPO_DIR/tasks.json" >&2
   exit 1
 fi
 
@@ -50,21 +55,37 @@ for sh in "$REPO_DIR"/*.sh; do
   copied=$((copied + 1))
 done
 
-# 拷贝选定的语言包，改名为 lang.sh（脚本固定 source 这一个文件）
-cp "$LANG_SRC" "$TARGET_DIR/lang.sh"
+# 拷贝选定的脚本文案包，改名为 lang.sh（脚本固定 source 这一个文件）
+cp "$MSG_SRC" "$TARGET_DIR/lang.sh"
 
-# 渲染 tasks.json：__GIT_COMMAND_DIR__ → 实际路径
-# 用 | 作分隔符避免 / 冲突
-sed "s|__GIT_COMMAND_DIR__|$TARGET_DIR|g" "$REPO_DIR/tasks.json" > "$ZED_TASKS"
+# 渲染 tasks.json：
+#   1) source labels-<lang>.sh 拿到所有 LABEL_* 变量
+#   2) 把整个文件读入 $content
+#   3) 替换 __GIT_COMMAND_DIR__ 为安装目录
+#   4) 遍历 LABEL_* 变量，替换 __LABEL_X__ 占位符
+#   5) 验证无残留 + 写出
+# shellcheck source=/dev/null
+source "$LABELS_SRC"
+content=$(cat "$REPO_DIR/tasks.json")
+content="${content//__GIT_COMMAND_DIR__/$TARGET_DIR}"
+label_count=0
+for label in $(compgen -A variable | grep '^LABEL_'); do
+  val="${!label}"
+  content="${content//__${label}__/$val}"
+  label_count=$((label_count + 1))
+done
+printf '%s\n' "$content" > "$ZED_TASKS"
 
-# 检查渲染结果里不应再有占位符
-if grep -q "__GIT_COMMAND_DIR__" "$ZED_TASKS"; then
-  echo "✗ 渲染后仍有占位符残留：$ZED_TASKS" >&2
+# Sanity: no placeholder should remain
+if grep -qE "__(GIT_COMMAND_DIR|LABEL_[A-Z_]+)__" "$ZED_TASKS"; then
+  echo "✗ Unsubstituted placeholders remain:" >&2
+  grep -nE "__(GIT_COMMAND_DIR|LABEL_[A-Z_]+)__" "$ZED_TASKS" | head -5 >&2
   exit 1
 fi
 
-echo "✓ 已同步 $copied 个脚本  → $TARGET_DIR"
-echo "✓ 语言包 [$LANG_CHOICE]    → $TARGET_DIR/lang.sh"
-echo "✓ 已渲染 tasks.json     → $ZED_TASKS"
+echo "✓ Synced $copied scripts   → $TARGET_DIR"
+echo "✓ Message pack [$LANG_CHOICE] → $TARGET_DIR/lang.sh"
+echo "✓ Substituted $label_count menu labels → tasks.json"
+echo "✓ Rendered tasks.json     → $ZED_TASKS"
 echo
-echo "下一步：Zed 中按 Cmd+Shift+P → 'reload window'，菜单生效。"
+echo "Next: in Zed, Cmd+Shift+P → 'reload window' to activate."
