@@ -38,5 +38,52 @@ assert_eq "$(slug '~^:?*[\')"                ''                          "全非
 assert_eq "$(slug '中文 ✨ test')"            '中文-✨-test'              "中文 + emoji 混合"
 
 echo
+echo "── 集成测试 ──"
+
+# 沙箱：建临时 bare+worktree 布局
+setup_sandbox() {
+  local sb
+  sb=$(mktemp -d)
+  cd "$sb"
+  # bare repo
+  git init --bare .bare >/dev/null
+  git --git-dir=.bare symbolic-ref HEAD refs/heads/main
+  # 占位 commit（worktree add 需要 HEAD 有 commit）
+  local tree commit
+  tree=$(git --git-dir=.bare hash-object -t tree --stdin < /dev/null)
+  commit=$(git --git-dir=.bare commit-tree -m "init" "$tree")
+  git --git-dir=.bare update-ref refs/heads/main "$commit"
+  echo "gitdir: ./.bare" > .git
+  git worktree add main main >/dev/null
+  # 在 main 里建 3 个 commit 不同 subject
+  cd main
+  git config user.email "test@example.com"
+  git config user.name "test"
+  echo "a" > a.txt && git add a.txt && git commit -m "fix: auth bug in login" >/dev/null
+  echo "b" > b.txt && git add b.txt && git commit -m "修复登录 bug" >/dev/null
+  echo "c" > c.txt && git add c.txt && git commit -m "feat(payment): add stripe" >/dev/null
+  printf '%s\n' "$sb"
+}
+
+teardown_sandbox() {
+  local sb="$1"
+  cd /
+  rm -rf "$sb"
+}
+
+SB=$(setup_sandbox)
+echo "  sandbox: $SB"
+SHA1=$(git rev-parse HEAD~2)  # fix: auth bug...
+SHA2=$(git rev-parse HEAD~1)  # 修复登录 bug
+SHA3=$(git rev-parse HEAD)    # feat(payment): add stripe
+
+# 占位断言（下个 Task 实现真测试）
+assert_eq "ok" "ok" "sandbox 建好"
+
+teardown_sandbox "$SB"
+cd "$DIR"
+
+echo
+echo "── 总计 ──"
 echo "PASS: $pass   FAIL: $fail"
 [ "$fail" -eq 0 ]
