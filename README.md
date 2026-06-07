@@ -64,14 +64,28 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh zh
 
 ## Safety Design
 
-Every script that sources `lib.sh` gets these guarantees automatically:
+Every script that sources `lib.sh` automatically gets:
 
-- **`ensure_clean_state`** — refuses to start if a rebase / cherry-pick / revert / merge is already in progress (prevents stacking mid-op state)
-- **EXIT trap auto-rollback** — registered at the top of `lib.sh`. On non-zero exit, if a rebase-like state is detected the trap runs `git <kind> --abort` and prints a clear "auto-rolled back" message. On signals, `enable_failure_rollback` adds `INT` / `TERM` / `HUP` handlers that exit with a non-zero code and feed back into the same EXIT trap.
-- **`_GIT_CMD_DONE=1` short-circuit** — after the script's main work finishes successfully, the trap sets this flag before the `wait_to_close` prompt. A subsequent Ctrl+C or pane close during the wait will *not* trigger a spurious rollback — the work already succeeded.
-- **`run_or_abort`** — wraps a single git subcommand; on failure prints why and runs the matching `--abort` before exiting
+- **`ensure_clean_state`** — refuses to start if a rebase / cherry-pick / revert / merge is already in progress (prevents stacking mid-op state on top of mid-op state)
+- **EXIT trap auto-rollback** — registered at the top of `lib.sh` for *every* script. On non-zero exit it inspects the git directory; if a rebase-like state is detected it runs `git <kind> --abort` and prints a clear "auto-rolled back" message
+- **Smart SIGINT handler** — also registered at the top of `lib.sh`. Ctrl+C is routed by current git state:
+  - **mid-op** (`rebase-merge` / `CHERRY_PICK_HEAD` / `REVERT_HEAD` / `MERGE_HEAD` present) → exit 130 → EXIT trap aborts the operation
+  - **idle** (just waiting for input) → set `_GIT_CMD_DONE=1` and exit 0 → EXIT trap short-circuits → Zed's `hide: on_success` collapses the pane. No spurious "press Enter to close" after a Ctrl+C — you already said you want out
+- **`_GIT_CMD_DONE=1` short-circuit** — once the main work finishes successfully, the trap sets this flag before the `wait_to_close` prompt. Any subsequent Ctrl+C / pane close / kill during the wait will *not* re-enter the abort branch — the work already succeeded
+- **`enable_failure_rollback()`** — history-rewriting scripts call this to additionally trap TERM (143), HUP (129), and QUIT (131) so those signals get routed through the same EXIT-trap abort path
+- **`run_or_abort`** — wraps a single git subcommand; on failure prints why and runs the matching `git <kind> --abort` before exiting
 
-Only `SIGKILL` / power loss can bypass this (POSIX limitation).
+**User cancellation is treated as success, not failure.** Answering `n` at any `y/N` confirm, hitting Ctrl+C while idle, typing `:q` in a multi-line message editor, leaving a required input blank — all exit 0. You chose to stop; that's not an error. Zed collapses the pane right away.
+
+**Signal exit-code map (everything routes through the EXIT trap):**
+
+| Signal | Exit code | Source |
+|--------|-----------|--------|
+| `SIGINT` (Ctrl+C) | 130 (mid-op) or 0 (idle) | smart `_lib_handle_int` at lib.sh top |
+| `SIGTERM` | 143 | `enable_failure_rollback` |
+| `SIGHUP` (terminal closed) | 129 | `enable_failure_rollback` |
+| `SIGQUIT` (Ctrl+\\) | 131 | `enable_failure_rollback` |
+| `SIGKILL` / power loss | 137 / – | **not interceptable** (POSIX limitation) |
 
 Each script's entry point uses `show_intro` to print "what it does / when to use it / caveats", then prompts for a `y/N` confirm before touching anything. On success the script blocks on "press Enter to close" so you can read the final output, then Zed's `hide: on_success` collapses the pane.
 

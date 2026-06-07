@@ -67,14 +67,28 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh zh
 
 任何 `source lib.sh` 的脚本都自动获得以下保证：
 
-- **`ensure_clean_state`** — 启动前如果检测到 rebase / cherry-pick / revert / merge 进行中，直接拒绝运行（防止半成品状态叠加）
-- **EXIT trap 自动回滚** — 由 `lib.sh` 顶层注册。非零退出时如果发现还在 rebase 类状态，trap 会自动跑 `git <kind> --abort` 并打印"已自动回滚"提示。对信号则由 `enable_failure_rollback` 注册 `INT` / `TERM` / `HUP` 处理器统一翻成非零退出，再走 EXIT trap。
-- **`_GIT_CMD_DONE=1` 短路** — 主流程成功完成后、进入 `wait_to_close` 提示前，trap 把这个标记置位。之后用户 Ctrl+C 或关 pane 都不会触发误回滚——业务已经成功。
-- **`run_or_abort`** — 包一层 git 子命令；命令失败时友好报错并跑对应的 `--abort` 再退出
+- **`ensure_clean_state`** — 启动前如果检测到 rebase / cherry-pick / revert / merge 进行中，直接拒绝运行（防止半成品状态叠加在半成品状态上）
+- **EXIT trap 自动回滚** — 由 `lib.sh` 顶层注册到所有脚本。非零退出时如果发现还在 rebase 类状态，trap 会自动跑 `git <kind> --abort` 并打印"已自动回滚"提示
+- **智能 SIGINT 处理器** — 也由 `lib.sh` 顶层注册。Ctrl+C 按当前 git 状态分两路：
+  - **mid-op**（检测到 `rebase-merge` / `CHERRY_PICK_HEAD` / `REVERT_HEAD` / `MERGE_HEAD`）→ exit 130 → EXIT trap 走 abort 分支
+  - **idle**（只是在等输入）→ 置 `_GIT_CMD_DONE=1` 并 exit 0 → EXIT trap 短路 → Zed `hide: on_success` 直接收 pane。Ctrl+C 之后**不会**再让你按 Enter 关闭——你都按 Ctrl+C 了就想退出
+- **`_GIT_CMD_DONE=1` 短路** — 主流程成功完成后、进入 `wait_to_close` 提示前，trap 把这个标记置位。此后任何 Ctrl+C / 关 pane / kill 都不会重新进入 abort 分支——业务已经成功
+- **`enable_failure_rollback()`** — 改历史脚本调用它额外注册 TERM (143)、HUP (129)、QUIT (131) trap，让这些信号也走 EXIT-trap 的 abort 路径
+- **`run_or_abort`** — 包一层 git 子命令；命令失败时友好报错并跑对应的 `git <kind> --abort` 再退出
 
-只有 `SIGKILL` / 断电这种不可拦截信号无法回滚（POSIX 限制）。
+**用户取消被视为成功，不是失败。** 在任何 `y/N` 处答 `n`、idle 时按 Ctrl+C、多行 message 编辑里输 `:q`、必填输入留空——都 exit 0。是你主动选择停下，不算 error。Zed 会立刻收 pane。
 
-每个脚本顶部都会用 `show_intro` 打印"做什么 / 何时用 / 注意点"，二次确认后才开干。成功完成后脚本会停在 "按 Enter 关闭" 等你看完输出，然后 Zed 的 `hide: on_success` 把 pane 自动收掉。
+**信号退出码对照表（统一走 EXIT trap）：**
+
+| 信号 | 退出码 | 来源 |
+|------|--------|------|
+| `SIGINT`（Ctrl+C）| 130 (mid-op) 或 0 (idle) | lib.sh 顶层的智能 `_lib_handle_int` |
+| `SIGTERM` | 143 | `enable_failure_rollback` |
+| `SIGHUP`（终端关闭）| 129 | `enable_failure_rollback` |
+| `SIGQUIT`（Ctrl+\\）| 131 | `enable_failure_rollback` |
+| `SIGKILL` / 断电 | 137 / – | **不可拦截**（POSIX 限制） |
+
+每个脚本顶部用 `show_intro` 打印"做什么 / 何时用 / 注意点"，二次确认后才开干。成功完成后停在 "按 Enter 关闭" 等你看完输出，然后 Zed 的 `hide: on_success` 把 pane 自动收掉。
 
 ## 项目布局
 
