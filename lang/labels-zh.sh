@@ -50,6 +50,10 @@ LABEL_BRANCH_FROM='Git · 新建分支'
 LABEL_BRANCH_TRY='Git · 试错分支'
 LABEL_BRANCH_REBASE_ONTO='Git · 分支 A 变基到 B'
 LABEL_BRANCH_DELETE='Git · 删除分支'
+LABEL_BRANCH_CHECKOUT='Git · 切换分支'
+LABEL_BRANCH_RENAME='Git · 重命名分支'
+LABEL_COPY_BRANCH_NAME='Git · 复制分支名'
+LABEL_COPY_COMMIT_MSG='Git · 复制 message'
 
 # ── 7. Tag ──────────────────────────────────────────────────────
 LABEL_SEP_TAG='──── 7. Tag ────'

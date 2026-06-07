@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="(review — detached; ветку чистить не
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="Удалить также локальную ветку '%s'? [y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ Локальная ветка удалена."
 MSG_WT_RM_BRANCH_ABSENT_FMT="(ветки '%s' не существует; возможно, уже удалена через git worktree remove)\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout (переключиться на branch, указывающий на этот commit)"
+MSG_BRANCH_CHECKOUT_PURPOSE="Что:   переключить HEAD на локальный branch, который указывает на этот commit"
+MSG_BRANCH_CHECKOUT_WHEN="Когда: перейти на существующий branch из Git Graph вместо копирования имени в терминал"
+MSG_BRANCH_CHECKOUT_NOTE="Заметка: нужен чистый working tree; не переключит, если уже на выбранном branch"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="В working tree есть незакоммиченные изменения; сначала commit или stash."
+MSG_BRANCH_CHECKOUT_NONE="На этом commit нет локальных branch для переключения."
+MSG_BRANCH_CHECKOUT_ONE_FMT='Единственный branch на этом commit: %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="Локальные branch на этом commit:"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="Выбери один (имя branch или номер): "
+MSG_BRANCH_CHECKOUT_NO_INPUT="Нет ввода; отменено."
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="Branch '%s' не в списке на этом commit.\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='Ты уже на %s; делать нечего.\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename (переименовать branch, указывающий на этот commit)"
+MSG_BRANCH_RENAME_PURPOSE="Что:   переименовать локальный branch; опционально перезалить на remote (удалить старое имя, push новое)"
+MSG_BRANCH_RENAME_WHEN="Когда: исправить опечатку / переназначить try/* / стандартизировать имя"
+MSG_BRANCH_RENAME_NOTE="Заметка: переименование на remote — две операции (push нового + удаление старого); согласуй с коллегами"
+MSG_BRANCH_RENAME_NONE="На этом commit нет локальных branch для переименования."
+MSG_BRANCH_RENAME_ONE_FMT='Единственный branch на этом commit: %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="Локальные branch на этом commit:"
+MSG_BRANCH_RENAME_SELECT_PROMPT="Выбери один для переименования (имя branch или номер): "
+MSG_BRANCH_RENAME_NO_INPUT="Нет ввода; отменено."
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="Branch '%s' не в списке на этом commit.\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="Новое имя: "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="Недопустимое имя branch: %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="Branch уже существует: %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="Переименовано: %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="Переименовать также на remote [%s] (push новое + удалить старое)? [y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="Переименование на remote выполнено."
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name (копировать имя branch с этого commit в буфер обмена)"
+MSG_COPY_BRANCH_PURPOSE="Что:   положить имя branch в системный буфер обмена для вставки в другом месте"
+MSG_COPY_BRANCH_WHEN="Когда: отправить имя в чат / вставить в описание PR / использовать в другом терминале"
+MSG_COPY_BRANCH_NOTE="Заметка: использует pbcopy (macOS) / wl-copy / xclip / xsel — что доступно"
+MSG_COPY_BRANCH_NONE="На этом commit нет локальных branch для копирования."
+MSG_COPY_BRANCH_LIST_HEADER="Локальные branch на этом commit:"
+MSG_COPY_BRANCH_SELECT_PROMPT="Выбери один (имя branch или номер): "
+MSG_COPY_BRANCH_NO_INPUT="Нет ввода; отменено."
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="Branch '%s' не в списке на этом commit.\n"
+MSG_COPY_BRANCH_DONE_FMT="Скопировано: %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="Утилита буфера обмена не найдена (нужен pbcopy / wl-copy / xclip / xsel). Имя branch напечатано ниже:"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message (копировать message этого commit в буфер обмена)"
+MSG_COPY_MSG_PURPOSE="Что:   положить subject commit (одна строка) или полный message в системный буфер обмена"
+MSG_COPY_MSG_WHEN="Когда: вставить в release note / PR / чат / email"
+MSG_COPY_MSG_NOTE="Заметка: использует pbcopy (macOS) / wl-copy / xclip / xsel — что доступно"
+MSG_COPY_MSG_KIND_PROMPT="Копировать [s]ubject (по умолчанию) / [f]ull message: "
+MSG_COPY_MSG_KIND_INVALID_FMT="Недопустимый выбор: %s\n"
+MSG_COPY_MSG_DONE_FMT='Скопировано: %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="Утилита буфера обмена не найдена (нужен pbcopy / wl-copy / xclip / xsel). Message напечатан ниже:"

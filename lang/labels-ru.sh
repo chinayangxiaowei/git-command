@@ -47,6 +47,10 @@ LABEL_BRANCH_FROM='Git · Новая branch'
 LABEL_BRANCH_TRY='Git · Try branch'
 LABEL_BRANCH_REBASE_ONTO='Git · Rebase A на B'
 LABEL_BRANCH_DELETE='Git · Удалить branch'
+LABEL_BRANCH_CHECKOUT='Git · Переключить branch'
+LABEL_BRANCH_RENAME='Git · Переименовать branch'
+LABEL_COPY_BRANCH_NAME='Git · Копировать имя branch'
+LABEL_COPY_COMMIT_MSG='Git · Копировать commit message'
 
 # ── 7. Tag ──────────────────────────────────────────────────────
 LABEL_SEP_TAG='──── 7. Tag ────'

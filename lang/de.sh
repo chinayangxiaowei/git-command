@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="(review ist detached; kein branch zum Aufräumen)"
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="Auch lokalen branch '%s' löschen? [y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ Lokaler branch gelöscht."
 MSG_WT_RM_BRANCH_ABSENT_FMT="(branch '%s' existiert nicht; möglicherweise bereits von git worktree remove entfernt)\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout (auf einen branch wechseln, der auf diesen commit zeigt)"
+MSG_BRANCH_CHECKOUT_PURPOSE="Was:   schaltet HEAD auf einen lokalen branch um, der auf diesen commit zeigt"
+MSG_BRANCH_CHECKOUT_WHEN="Wann:  aus dem Git Graph auf einen bestehenden branch wechseln, statt seinen Namen ins Terminal zu kopieren"
+MSG_BRANCH_CHECKOUT_NOTE="Hinweis: erfordert sauberes Arbeitsverzeichnis; wechselt nicht, wenn du bereits auf dem gewählten branch bist"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="Arbeitsverzeichnis enthält uncommittete Änderungen; zuerst committen oder stashen."
+MSG_BRANCH_CHECKOUT_NONE="Kein lokaler branch zeigt auf diesen commit."
+MSG_BRANCH_CHECKOUT_ONE_FMT='Einziger branch an diesem commit: %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="Lokale branches an diesem commit:"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="Einen wählen (Branch-Name oder Nummer): "
+MSG_BRANCH_CHECKOUT_NO_INPUT="Keine Eingabe; abgebrochen."
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="Branch '%s' ist nicht in der Liste der branches an diesem commit.\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='Du bist bereits auf %s; nichts zu tun.\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename (einen branch umbenennen, der auf diesen commit zeigt)"
+MSG_BRANCH_RENAME_PURPOSE="Was:   benennt einen lokalen branch um; optional remote nachziehen (alten Namen löschen, neuen pushen)"
+MSG_BRANCH_RENAME_WHEN="Wann:  Tippfehler beheben / try/* umwidmen / Namen standardisieren"
+MSG_BRANCH_RENAME_NOTE="Hinweis: remote rename sind zwei Operationen (neu pushen + alt löschen); mit Mitarbeitern abstimmen"
+MSG_BRANCH_RENAME_NONE="Kein lokaler branch zeigt auf diesen commit zum Umbenennen."
+MSG_BRANCH_RENAME_ONE_FMT='Einziger branch an diesem commit: %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="Lokale branches an diesem commit:"
+MSG_BRANCH_RENAME_SELECT_PROMPT="Einen zum Umbenennen wählen (Branch-Name oder Nummer): "
+MSG_BRANCH_RENAME_NO_INPUT="Keine Eingabe; abgebrochen."
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="Branch '%s' ist nicht in der Liste der branches an diesem commit.\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="Neuer Name: "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="Ungültiger Branch-Name: %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="Branch existiert bereits: %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="Umbenannt: %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="Auch auf remote [%s] umbenennen (neu pushen + alt löschen)? [y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="Remote-Umbenennung abgeschlossen."
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name (Branch-Name an diesem commit in die Zwischenablage kopieren)"
+MSG_COPY_BRANCH_PURPOSE="Was:   legt einen Branch-Namen in die System-Zwischenablage zum Einfügen anderswo"
+MSG_COPY_BRANCH_WHEN="Wann:  den Namen im Chat verschicken / in eine PR-Beschreibung einfügen / in einem anderen Terminal nutzen"
+MSG_COPY_BRANCH_NOTE="Hinweis: nutzt pbcopy (macOS) / wl-copy / xclip / xsel — was verfügbar ist"
+MSG_COPY_BRANCH_NONE="Kein lokaler branch an diesem commit zum Kopieren."
+MSG_COPY_BRANCH_LIST_HEADER="Lokale branches an diesem commit:"
+MSG_COPY_BRANCH_SELECT_PROMPT="Einen wählen (Branch-Name oder Nummer): "
+MSG_COPY_BRANCH_NO_INPUT="Keine Eingabe; abgebrochen."
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="Branch '%s' ist nicht in der Liste der branches an diesem commit.\n"
+MSG_COPY_BRANCH_DONE_FMT="Kopiert: %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="Kein Clipboard-Tool gefunden (benötigt pbcopy / wl-copy / xclip / xsel). Branch-Name unten ausgegeben:"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message (commit-message dieses commits in die Zwischenablage kopieren)"
+MSG_COPY_MSG_PURPOSE="Was:   legt den Betreff (einzeilig) oder die vollständige commit-message in die System-Zwischenablage"
+MSG_COPY_MSG_WHEN="Wann:  in Release Notes / PR / Chat / E-Mail einfügen"
+MSG_COPY_MSG_NOTE="Hinweis: nutzt pbcopy (macOS) / wl-copy / xclip / xsel — was verfügbar ist"
+MSG_COPY_MSG_KIND_PROMPT="Kopieren: [s] Betreff (Standard) / [f] vollständige message: "
+MSG_COPY_MSG_KIND_INVALID_FMT="Ungültige Auswahl: %s\n"
+MSG_COPY_MSG_DONE_FMT='Kopiert: %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="Kein Clipboard-Tool gefunden (benötigt pbcopy / wl-copy / xclip / xsel). message unten ausgegeben:"

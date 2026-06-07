@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="(review는 detached 상태; 정리할 branch 없음)
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="로컬 branch '%s'도 삭제하시겠습니까? [y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ 로컬 branch가 삭제되었습니다."
 MSG_WT_RM_BRANCH_ABSENT_FMT="(branch '%s'가 존재하지 않음; git worktree remove로 이미 제거되었을 가능성)\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout (이 commit을 가리키는 branch로 전환)"
+MSG_BRANCH_CHECKOUT_PURPOSE="용도:  HEAD를 이 commit을 가리키는 로컬 branch로 전환"
+MSG_BRANCH_CHECKOUT_WHEN="상황:  Git Graph에서 기존 branch로 이동하고 싶을 때 (이름을 터미널에 복사하는 대신)"
+MSG_BRANCH_CHECKOUT_NOTE="주의:  작업 트리가 깨끗해야 하며, 이미 해당 branch에 있다면 전환하지 않습니다"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="작업 트리에 commit되지 않은 변경 사항이 있습니다; 먼저 commit 또는 stash 해주세요."
+MSG_BRANCH_CHECKOUT_NONE="이 commit에 checkout할 로컬 branch가 없습니다."
+MSG_BRANCH_CHECKOUT_ONE_FMT='이 commit의 유일한 branch: %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="이 commit의 로컬 branch:"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="하나를 선택하세요 (branch 이름 또는 번호): "
+MSG_BRANCH_CHECKOUT_NO_INPUT="입력 없음; 취소되었습니다."
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="branch '%s'는 이 commit의 목록에 없습니다.\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='이미 %s에 있습니다; 할 일이 없습니다.\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename (이 commit을 가리키는 branch 이름 변경)"
+MSG_BRANCH_RENAME_PURPOSE="용도:  로컬 branch 이름 변경; 선택적으로 remote에도 재적용 (이전 이름 삭제, 새 이름 push)"
+MSG_BRANCH_RENAME_WHEN="상황:  오타 수정 / try/* 재사용 / 이름 표준화"
+MSG_BRANCH_RENAME_NOTE="주의:  remote 이름 변경은 두 단계 작업입니다 (새 이름 push + 이전 이름 삭제); 협업자와 조율하세요"
+MSG_BRANCH_RENAME_NONE="이 commit에 이름을 변경할 로컬 branch가 없습니다."
+MSG_BRANCH_RENAME_ONE_FMT='이 commit의 유일한 branch: %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="이 commit의 로컬 branch:"
+MSG_BRANCH_RENAME_SELECT_PROMPT="이름을 변경할 항목 선택 (branch 이름 또는 번호): "
+MSG_BRANCH_RENAME_NO_INPUT="입력 없음; 취소되었습니다."
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="branch '%s'는 이 commit의 목록에 없습니다.\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="새 이름: "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="잘못된 branch 이름: %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="branch가 이미 존재합니다: %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="이름 변경됨: %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="remote [%s]에서도 이름을 변경하시겠습니까 (새 이름 push + 이전 이름 삭제)? [y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="remote 이름 변경 완료."
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name (이 commit을 가리키는 branch 이름을 클립보드에 복사)"
+MSG_COPY_BRANCH_PURPOSE="용도:  branch 이름을 시스템 클립보드에 복사해서 다른 곳에 붙여넣기"
+MSG_COPY_BRANCH_WHEN="상황:  채팅으로 이름 공유 / PR 설명에 붙여넣기 / 다른 터미널에서 사용"
+MSG_COPY_BRANCH_NOTE="주의:  pbcopy (macOS) / wl-copy / xclip / xsel 중 사용 가능한 것을 이용합니다"
+MSG_COPY_BRANCH_NONE="이 commit에 복사할 로컬 branch가 없습니다."
+MSG_COPY_BRANCH_LIST_HEADER="이 commit의 로컬 branch:"
+MSG_COPY_BRANCH_SELECT_PROMPT="하나를 선택하세요 (branch 이름 또는 번호): "
+MSG_COPY_BRANCH_NO_INPUT="입력 없음; 취소되었습니다."
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="branch '%s'는 이 commit의 목록에 없습니다.\n"
+MSG_COPY_BRANCH_DONE_FMT="복사됨: %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="클립보드 유틸리티를 찾을 수 없습니다 (pbcopy / wl-copy / xclip / xsel 필요). branch 이름을 아래에 출력합니다:"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message (이 commit의 message를 클립보드에 복사)"
+MSG_COPY_MSG_PURPOSE="용도:  commit의 제목 (한 줄) 또는 전체 message를 시스템 클립보드에 복사"
+MSG_COPY_MSG_WHEN="상황:  릴리스 노트 / PR / 채팅 / 이메일에 붙여넣기"
+MSG_COPY_MSG_NOTE="주의:  pbcopy (macOS) / wl-copy / xclip / xsel 중 사용 가능한 것을 이용합니다"
+MSG_COPY_MSG_KIND_PROMPT="복사할 항목 [s] 제목 (기본) / [f] 전체 message: "
+MSG_COPY_MSG_KIND_INVALID_FMT="잘못된 선택: %s\n"
+MSG_COPY_MSG_DONE_FMT='복사됨: %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="클립보드 유틸리티를 찾을 수 없습니다 (pbcopy / wl-copy / xclip / xsel 필요). message를 아래에 출력합니다:"

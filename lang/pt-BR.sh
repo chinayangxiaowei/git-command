@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="(o review está detached; sem branch para limpar)"
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="Deletar também a branch local '%s'? [y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ Branch local deletada."
 MSG_WT_RM_BRANCH_ABSENT_FMT="(a branch '%s' não existe; possivelmente já removida pelo git worktree remove)\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout (mudar para uma branch apontando neste commit)"
+MSG_BRANCH_CHECKOUT_PURPOSE="O quê:  move o HEAD para uma branch local que aponta para este commit"
+MSG_BRANCH_CHECKOUT_WHEN="Quando: ir para uma branch existente direto do Git Graph em vez de copiar o nome para o terminal"
+MSG_BRANCH_CHECKOUT_NOTE="Nota:   exige uma working tree limpa; não troca se você já estiver na branch escolhida"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="A working tree tem alterações não commitadas; faça commit ou stash primeiro."
+MSG_BRANCH_CHECKOUT_NONE="Nenhuma branch local neste commit para fazer checkout."
+MSG_BRANCH_CHECKOUT_ONE_FMT='Única branch neste commit: %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="Branches locais neste commit:"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="Escolha uma (nome da branch ou número): "
+MSG_BRANCH_CHECKOUT_NO_INPUT="Nenhuma entrada; cancelado."
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="A branch '%s' não está na lista deste commit.\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='Você já está em %s; nada a fazer.\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename (renomear uma branch apontando neste commit)"
+MSG_BRANCH_RENAME_PURPOSE="O quê:  renomeia uma branch local; opcionalmente refaz o push no remote (apaga o nome antigo, faz push do novo)"
+MSG_BRANCH_RENAME_WHEN="Quando: corrigir um typo / reaproveitar uma try/* / padronizar um nome"
+MSG_BRANCH_RENAME_NOTE="Nota:   renomear no remote são duas operações (push do novo + delete do antigo); combine com os colaboradores"
+MSG_BRANCH_RENAME_NONE="Nenhuma branch local neste commit para renomear."
+MSG_BRANCH_RENAME_ONE_FMT='Única branch neste commit: %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="Branches locais neste commit:"
+MSG_BRANCH_RENAME_SELECT_PROMPT="Escolha uma para renomear (nome da branch ou número): "
+MSG_BRANCH_RENAME_NO_INPUT="Nenhuma entrada; cancelado."
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="A branch '%s' não está na lista deste commit.\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="Novo nome: "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="Nome de branch inválido: %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="Branch já existe: %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="Renomeada: %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="Renomear também no remote [%s] (push do novo + delete do antigo)? [y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="Rename no remote concluído."
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name (copiar um nome de branch deste commit para o clipboard)"
+MSG_COPY_BRANCH_PURPOSE="O quê:  coloca um nome de branch no clipboard do sistema para colar em outro lugar"
+MSG_COPY_BRANCH_WHEN="Quando: mandar o nome no chat / colar na descrição de um PR / usar em outro terminal"
+MSG_COPY_BRANCH_NOTE="Nota:   usa pbcopy (macOS) / wl-copy / xclip / xsel — o que estiver disponível"
+MSG_COPY_BRANCH_NONE="Nenhuma branch local neste commit para copiar."
+MSG_COPY_BRANCH_LIST_HEADER="Branches locais neste commit:"
+MSG_COPY_BRANCH_SELECT_PROMPT="Escolha uma (nome da branch ou número): "
+MSG_COPY_BRANCH_NO_INPUT="Nenhuma entrada; cancelado."
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="A branch '%s' não está na lista deste commit.\n"
+MSG_COPY_BRANCH_DONE_FMT="Copiado: %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="Nenhum utilitário de clipboard encontrado (precisa de pbcopy / wl-copy / xclip / xsel). Nome da branch impresso abaixo:"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message (copiar a message deste commit para o clipboard)"
+MSG_COPY_MSG_PURPOSE="O quê:  coloca o subject (uma linha) ou a message completa do commit no clipboard do sistema"
+MSG_COPY_MSG_WHEN="Quando: colar em uma release note / PR / chat / e-mail"
+MSG_COPY_MSG_NOTE="Nota:   usa pbcopy (macOS) / wl-copy / xclip / xsel — o que estiver disponível"
+MSG_COPY_MSG_KIND_PROMPT="Copiar [s]ubject (padrão) / message [f] completa: "
+MSG_COPY_MSG_KIND_INVALID_FMT="Escolha inválida: %s\n"
+MSG_COPY_MSG_DONE_FMT='Copiado: %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="Nenhum utilitário de clipboard encontrado (precisa de pbcopy / wl-copy / xclip / xsel). Message impressa abaixo:"

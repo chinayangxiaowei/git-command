@@ -47,6 +47,10 @@ LABEL_BRANCH_FROM='Git · 新規branch'
 LABEL_BRANCH_TRY='Git · branch試行'
 LABEL_BRANCH_REBASE_ONTO='Git · Rebase A onto B'
 LABEL_BRANCH_DELETE='Git · branch削除'
+LABEL_BRANCH_CHECKOUT='Git · branch切替'
+LABEL_BRANCH_RENAME='Git · branchリネーム'
+LABEL_COPY_BRANCH_NAME='Git · branch名コピー'
+LABEL_COPY_COMMIT_MSG='Git · commitメッセージコピー'
 
 # ── 7. Tag ──────────────────────────────────────────────────────
 LABEL_SEP_TAG='──── 7. Tag ────'

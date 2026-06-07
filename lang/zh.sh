@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="(review 是 detached，无分支需要清理)"
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="也删本地分支 '%s'？[y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ 本地分支已删除。"
 MSG_WT_RM_BRANCH_ABSENT_FMT="(分支 '%s' 不存在，可能 git worktree remove 已带走)\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout（切换到指向此 commit 的分支）"
+MSG_BRANCH_CHECKOUT_PURPOSE="作用: 把 HEAD 切到指向此 commit 的某个本地分支"
+MSG_BRANCH_CHECKOUT_WHEN="场景: 从 Git Graph 直接切到某分支，省去复制分支名到终端再 switch 的麻烦"
+MSG_BRANCH_CHECKOUT_NOTE="注意: 需要工作区干净；如已经在目标分支上则不动"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="工作区有未提交改动，请先 commit 或 stash。"
+MSG_BRANCH_CHECKOUT_NONE="此 commit 上没有本地分支可切换。"
+MSG_BRANCH_CHECKOUT_ONE_FMT='此 commit 上唯一分支: %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="此 commit 上的本地分支:"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="选哪个？(分支名或编号): "
+MSG_BRANCH_CHECKOUT_NO_INPUT="未输入，已取消。"
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="分支 '%s' 不在指向此 commit 的分支列表里。\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='已经在 %s 上了，无需切换。\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename（重命名指向此 commit 的分支）"
+MSG_BRANCH_RENAME_PURPOSE="作用: 重命名本地分支；可选同步在远端 push 新名 + 删除旧名"
+MSG_BRANCH_RENAME_WHEN="场景: 改 typo / 把 try/* 转正式 / 统一命名规范"
+MSG_BRANCH_RENAME_NOTE="注意: 远端重命名分两步（push 新名 + 删除旧名），需要跟协作者协调"
+MSG_BRANCH_RENAME_NONE="此 commit 上没有本地分支可改名。"
+MSG_BRANCH_RENAME_ONE_FMT='此 commit 上唯一分支: %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="此 commit 上的本地分支:"
+MSG_BRANCH_RENAME_SELECT_PROMPT="选哪个改名（分支名或编号）: "
+MSG_BRANCH_RENAME_NO_INPUT="未输入，已取消。"
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="分支 '%s' 不在指向此 commit 的分支列表里。\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="新名字: "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="无效的分支名: %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="分支已存在: %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="已重命名: %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="同时在远端 [%s] 改名（push 新 + 删旧）？[y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="远端重命名完成。"
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name（复制指向此 commit 的分支名到剪贴板）"
+MSG_COPY_BRANCH_PURPOSE="作用: 把分支名放到系统剪贴板，方便粘贴到别处"
+MSG_COPY_BRANCH_WHEN="场景: 发给同事 / 粘到 PR 描述 / 在另一个终端用"
+MSG_COPY_BRANCH_NOTE="注意: 使用 pbcopy（macOS）/ wl-copy / xclip / xsel，按可用顺序选"
+MSG_COPY_BRANCH_NONE="此 commit 上没有本地分支可复制。"
+MSG_COPY_BRANCH_LIST_HEADER="此 commit 上的本地分支:"
+MSG_COPY_BRANCH_SELECT_PROMPT="选哪个（分支名或编号）: "
+MSG_COPY_BRANCH_NO_INPUT="未输入，已取消。"
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="分支 '%s' 不在指向此 commit 的分支列表里。\n"
+MSG_COPY_BRANCH_DONE_FMT="已复制: %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="找不到剪贴板工具（需要 pbcopy / wl-copy / xclip / xsel）。分支名打印如下:"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message（复制此 commit 的 message 到剪贴板）"
+MSG_COPY_MSG_PURPOSE="作用: 把 commit 的 subject（首行）或完整 message 放到系统剪贴板"
+MSG_COPY_MSG_WHEN="场景: 粘到 release note / PR / 聊天 / 邮件"
+MSG_COPY_MSG_NOTE="注意: 使用 pbcopy（macOS）/ wl-copy / xclip / xsel，按可用顺序选"
+MSG_COPY_MSG_KIND_PROMPT="复制 [s]ubject（默认）/ [f]ull message: "
+MSG_COPY_MSG_KIND_INVALID_FMT="无效选项: %s\n"
+MSG_COPY_MSG_DONE_FMT='已复制: %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="找不到剪贴板工具（需要 pbcopy / wl-copy / xclip / xsel）。message 打印如下:"

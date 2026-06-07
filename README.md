@@ -39,7 +39,7 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
 
 ## Menu Inventory
 
-37 commands across 9 categories, injected into Zed's Git Graph commit right-click menu via `tasks.json`.
+41 commands across 9 categories, injected into Zed's Git Graph commit right-click menu via `tasks.json`.
 
 | Category | Commands |
 |----------|----------|
@@ -48,7 +48,7 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
 | Rewrite history | squash N commits forward; drop this commit; interactive rebase; soft / hard reset |
 | Fixup | merge working-tree changes into this commit (`--fixup` + autosquash); fold this commit into an ancestor |
 | Copy / Undo | cherry-pick; revert |
-| Branch | create branch from this commit; ad-hoc try branch; rebase branch A onto branch B (CLion-style); delete local branches at this commit (with optional remote) |
+| Branch | create branch from this commit; ad-hoc try branch; rebase branch A onto branch B (CLion-style); delete local branches at this commit (with optional remote); switch to / rename a branch at this commit; copy branch name; copy commit message — all clipboard-aware (`pbcopy` / `wl-copy` / `xclip` / `xsel`) |
 | Tag | create tag; delete tag (with optional remote) |
 | Stash | named stash push; pop most recent stash |
 | Worktree | create a new worktree from this commit (five purposes: `review` / `try` / `fix` / `feat` / `hot`, auto-named + opened in a new Zed window); each purpose has a matching "delete" menu item that lists existing worktrees and asks for paste-to-confirm |

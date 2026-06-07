@@ -214,6 +214,34 @@
     "tags": ["git-command"],
     "reveal": "always"
   },
+  {
+    "label": "__LABEL_BRANCH_CHECKOUT__",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/branch-checkout.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "__LABEL_BRANCH_RENAME__",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/branch-rename.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "__LABEL_COPY_BRANCH_NAME__",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/copy-branch-name.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "__LABEL_COPY_COMMIT_MSG__",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/copy-commit-message.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
 
   {
     "label": "__LABEL_SEP_TAG__",

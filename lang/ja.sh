@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="（review は detached のため、後片付けす�
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="ローカルブランチ '%s' も削除しますか？ [y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ ローカルブランチを削除しました。"
 MSG_WT_RM_BRANCH_ABSENT_FMT="（ブランチ '%s' は存在しません。git worktree remove で既に削除済みの可能性）\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout（この commit を指す branch に切り替える）"
+MSG_BRANCH_CHECKOUT_PURPOSE="用途: HEAD を、この commit を指すローカル branch に切り替える"
+MSG_BRANCH_CHECKOUT_WHEN="場面: Git Graph から既存 branch へ移動したいとき。branch 名をターミナルにコピーする手間が省ける"
+MSG_BRANCH_CHECKOUT_NOTE="注意: 作業ツリーがクリーンであることが必要。既に対象 branch にいる場合は切り替えません"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="作業ツリーに未コミットの変更があります。先に commit または stash してください。"
+MSG_BRANCH_CHECKOUT_NONE="この commit に切り替え可能なローカル branch はありません。"
+MSG_BRANCH_CHECKOUT_ONE_FMT='この commit を指す唯一の branch: %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="この commit を指すローカル branch:"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="1 つ選択してください（branch 名または番号）: "
+MSG_BRANCH_CHECKOUT_NO_INPUT="入力がないためキャンセルしました。"
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="branch '%s' はこの commit の一覧にありません。\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='既に %s にいます。何もする必要はありません。\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename（この commit を指す branch をリネームする）"
+MSG_BRANCH_RENAME_PURPOSE="用途: ローカル branch をリネーム。任意で remote 側も付け替え（旧名を削除して新名を push）"
+MSG_BRANCH_RENAME_WHEN="場面: typo を修正 / try/* を再利用 / 命名規則に合わせる"
+MSG_BRANCH_RENAME_NOTE="注意: remote のリネームは 2 操作（新名を push + 旧名を削除）。共同作業者と調整してください"
+MSG_BRANCH_RENAME_NONE="この commit にリネーム可能なローカル branch はありません。"
+MSG_BRANCH_RENAME_ONE_FMT='この commit を指す唯一の branch: %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="この commit を指すローカル branch:"
+MSG_BRANCH_RENAME_SELECT_PROMPT="リネームするものを選択してください（branch 名または番号）: "
+MSG_BRANCH_RENAME_NO_INPUT="入力がないためキャンセルしました。"
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="branch '%s' はこの commit の一覧にありません。\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="新しい名前: "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="無効な branch 名: %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="branch は既に存在します: %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="リネーム完了: %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="remote [%s] 側もリネームしますか？（新名を push + 旧名を削除）[y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="remote 側のリネームが完了しました。"
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name（この commit を指す branch 名をクリップボードへコピー）"
+MSG_COPY_BRANCH_PURPOSE="用途: branch 名をシステムのクリップボードに入れ、別の場所に貼り付けられるようにする"
+MSG_COPY_BRANCH_WHEN="場面: チャットで送る / PR の説明に貼る / 別ターミナルで使う"
+MSG_COPY_BRANCH_NOTE="注意: pbcopy (macOS) / wl-copy / xclip / xsel のうち利用可能なものを使用します"
+MSG_COPY_BRANCH_NONE="この commit にコピーできるローカル branch はありません。"
+MSG_COPY_BRANCH_LIST_HEADER="この commit を指すローカル branch:"
+MSG_COPY_BRANCH_SELECT_PROMPT="1 つ選択してください（branch 名または番号）: "
+MSG_COPY_BRANCH_NO_INPUT="入力がないためキャンセルしました。"
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="branch '%s' はこの commit の一覧にありません。\n"
+MSG_COPY_BRANCH_DONE_FMT="コピーしました: %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="クリップボードユーティリティが見つかりません（pbcopy / wl-copy / xclip / xsel のいずれかが必要）。branch 名を以下に表示します:"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message（この commit のメッセージをクリップボードへコピー）"
+MSG_COPY_MSG_PURPOSE="用途: commit の subject（1 行目）またはメッセージ全文をシステムのクリップボードに入れる"
+MSG_COPY_MSG_WHEN="場面: リリースノート / PR / チャット / メールに貼り付ける"
+MSG_COPY_MSG_NOTE="注意: pbcopy (macOS) / wl-copy / xclip / xsel のうち利用可能なものを使用します"
+MSG_COPY_MSG_KIND_PROMPT="コピー対象 [s]ubject（デフォルト）/ [f]ull メッセージ全文: "
+MSG_COPY_MSG_KIND_INVALID_FMT="無効な選択です: %s\n"
+MSG_COPY_MSG_DONE_FMT='コピーしました: %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="クリップボードユーティリティが見つかりません（pbcopy / wl-copy / xclip / xsel のいずれかが必要）。メッセージを以下に表示します:"

@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="(review is detached; no branch to clean up)"
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="Also delete local branch '%s'? [y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ Local branch deleted."
 MSG_WT_RM_BRANCH_ABSENT_FMT="(branch '%s' does not exist; possibly already removed by git worktree remove)\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout (switch to a branch pointing at this commit)"
+MSG_BRANCH_CHECKOUT_PURPOSE="What:  switch HEAD to a local branch that points at this commit"
+MSG_BRANCH_CHECKOUT_WHEN="When:  move to an existing branch from the Git Graph instead of copying its name to the terminal"
+MSG_BRANCH_CHECKOUT_NOTE="Note:  requires a clean working tree; will not switch if already on the chosen branch"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="Working tree has uncommitted changes; commit or stash first."
+MSG_BRANCH_CHECKOUT_NONE="No local branches at this commit to check out."
+MSG_BRANCH_CHECKOUT_ONE_FMT='Sole branch at this commit: %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="Local branches at this commit:"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="Pick one (branch name or number): "
+MSG_BRANCH_CHECKOUT_NO_INPUT="No input; cancelled."
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="Branch '%s' is not in the at-this-commit list.\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='Already on %s; nothing to do.\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename (rename a branch pointing at this commit)"
+MSG_BRANCH_RENAME_PURPOSE="What:  rename a local branch; optionally re-push it on the remote (delete old name, push new)"
+MSG_BRANCH_RENAME_WHEN="When:  fix a typo / re-purpose a try/* / standardize a name"
+MSG_BRANCH_RENAME_NOTE="Note:  remote rename is two operations (push new + delete old); coordinate with collaborators"
+MSG_BRANCH_RENAME_NONE="No local branches at this commit to rename."
+MSG_BRANCH_RENAME_ONE_FMT='Sole branch at this commit: %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="Local branches at this commit:"
+MSG_BRANCH_RENAME_SELECT_PROMPT="Pick one to rename (branch name or number): "
+MSG_BRANCH_RENAME_NO_INPUT="No input; cancelled."
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="Branch '%s' is not in the at-this-commit list.\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="New name: "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="Invalid branch name: %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="Branch already exists: %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="Renamed: %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="Also rename on remote [%s] (push new + delete old)? [y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="Remote rename complete."
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name (copy a branch name pointing at this commit to clipboard)"
+MSG_COPY_BRANCH_PURPOSE="What:  put a branch name on the system clipboard for pasting elsewhere"
+MSG_COPY_BRANCH_WHEN="When:  send the name in chat / paste into a PR description / use in another terminal"
+MSG_COPY_BRANCH_NOTE="Note:  uses pbcopy (macOS) / wl-copy / xclip / xsel — whichever is available"
+MSG_COPY_BRANCH_NONE="No local branches at this commit to copy."
+MSG_COPY_BRANCH_LIST_HEADER="Local branches at this commit:"
+MSG_COPY_BRANCH_SELECT_PROMPT="Pick one (branch name or number): "
+MSG_COPY_BRANCH_NO_INPUT="No input; cancelled."
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="Branch '%s' is not in the at-this-commit list.\n"
+MSG_COPY_BRANCH_DONE_FMT="Copied: %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="No clipboard utility found (need pbcopy / wl-copy / xclip / xsel). Branch name printed below:"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message (copy this commit's message to clipboard)"
+MSG_COPY_MSG_PURPOSE="What:  put the commit's subject (one-line) or full message on the system clipboard"
+MSG_COPY_MSG_WHEN="When:  paste into a release note / PR / chat / email"
+MSG_COPY_MSG_NOTE="Note:  uses pbcopy (macOS) / wl-copy / xclip / xsel — whichever is available"
+MSG_COPY_MSG_KIND_PROMPT="Copy [s]ubject (default) / [f]ull message: "
+MSG_COPY_MSG_KIND_INVALID_FMT="Invalid choice: %s\n"
+MSG_COPY_MSG_DONE_FMT='Copied: %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="No clipboard utility found (need pbcopy / wl-copy / xclip / xsel). Message printed below:"

@@ -96,6 +96,24 @@ enable_failure_rollback() {
   trap 'exit 129' HUP   # 终端 / pane 关闭
 }
 
+# Best-effort: copy a string to the system clipboard.
+# Returns 0 on success, 1 if no clipboard utility is available.
+# Tries pbcopy (macOS) → wl-copy (Wayland) → xclip → xsel (X11).
+copy_to_clipboard() {
+  local s="$1"
+  if command -v pbcopy >/dev/null 2>&1; then
+    printf '%s' "$s" | pbcopy
+  elif command -v wl-copy >/dev/null 2>&1; then
+    printf '%s' "$s" | wl-copy
+  elif command -v xclip >/dev/null 2>&1; then
+    printf '%s' "$s" | xclip -selection clipboard
+  elif command -v xsel >/dev/null 2>&1; then
+    printf '%s' "$s" | xsel --clipboard --input
+  else
+    return 1
+  fi
+}
+
 # Best-effort: open a path in a new Zed window.
 # Honors GIT_COMMAND_NO_OPEN=1 to skip (used by the test suite to keep
 # Zed from popping up during runs). Never fails the calling script.

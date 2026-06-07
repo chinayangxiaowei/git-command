@@ -50,6 +50,10 @@ LABEL_BRANCH_FROM='Git · 建立 branch'
 LABEL_BRANCH_TRY='Git · 試做 branch'
 LABEL_BRANCH_REBASE_ONTO='Git · Rebase A 到 B'
 LABEL_BRANCH_DELETE='Git · 刪除 branch'
+LABEL_BRANCH_CHECKOUT='Git · 切換 branch'
+LABEL_BRANCH_RENAME='Git · 重新命名 branch'
+LABEL_COPY_BRANCH_NAME='Git · 複製 branch 名稱'
+LABEL_COPY_COMMIT_MSG='Git · 複製 commit message'
 
 # ── 7. Tag ──────────────────────────────────────────────────────
 LABEL_SEP_TAG='──── 7. Tag ────'

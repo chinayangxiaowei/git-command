@@ -389,3 +389,58 @@ MSG_WT_RM_REVIEW_NO_BRANCH="(review est detached ; aucune branch à nettoyer)"
 MSG_WT_RM_ALSO_DEL_BRANCH_FMT="Supprimer aussi la branch locale ’%s’ ? [y/N] "
 MSG_WT_RM_BRANCH_DONE="✓ Branch locale supprimée."
 MSG_WT_RM_BRANCH_ABSENT_FMT="(la branch ’%s’ n’existe pas ; peut-être déjà retirée par git worktree remove)\n"
+
+# ── branch-checkout.sh ──────────────────────────────────────────
+MSG_BRANCH_CHECKOUT_TITLE="branch-checkout (basculer sur une branch pointant sur ce commit)"
+MSG_BRANCH_CHECKOUT_PURPOSE="Quoi : bascule HEAD vers une branch locale pointant sur ce commit"
+MSG_BRANCH_CHECKOUT_WHEN="Quand : passer sur une branch existante depuis Git Graph plutôt que de copier son nom dans le terminal"
+MSG_BRANCH_CHECKOUT_NOTE="Note : nécessite un arbre de travail propre ; ne bascule pas si tu es déjà sur la branch choisie"
+MSG_BRANCH_CHECKOUT_DIRTY_TREE="L’arbre de travail a des changements non commités ; commit ou stash d’abord."
+MSG_BRANCH_CHECKOUT_NONE="Aucune branch locale sur ce commit à checkout."
+MSG_BRANCH_CHECKOUT_ONE_FMT='Seule branch sur ce commit : %s\n'
+MSG_BRANCH_CHECKOUT_LIST_HEADER="Branches locales sur ce commit :"
+MSG_BRANCH_CHECKOUT_SELECT_PROMPT="Choisis-en une (nom de branch ou numéro) : "
+MSG_BRANCH_CHECKOUT_NO_INPUT="Aucune saisie ; annulé."
+MSG_BRANCH_CHECKOUT_NOT_IN_LIST_FMT="La branch ’%s’ n’est pas dans la liste de ce commit.\n"
+MSG_BRANCH_CHECKOUT_ALREADY_FMT='Déjà sur %s ; rien à faire.\n'
+
+# ── branch-rename.sh ────────────────────────────────────────────
+MSG_BRANCH_RENAME_TITLE="branch-rename (renommer une branch pointant sur ce commit)"
+MSG_BRANCH_RENAME_PURPOSE="Quoi : renomme une branch locale ; éventuellement la re-push sur le remote (supprime l’ancien nom, push le nouveau)"
+MSG_BRANCH_RENAME_WHEN="Quand : corriger une faute / réutiliser une try/* / standardiser un nom"
+MSG_BRANCH_RENAME_NOTE="Note : le renommage remote est deux opérations (push nouveau + delete ancien) ; coordonne avec les collaborateurs"
+MSG_BRANCH_RENAME_NONE="Aucune branch locale sur ce commit à renommer."
+MSG_BRANCH_RENAME_ONE_FMT='Seule branch sur ce commit : %s\n'
+MSG_BRANCH_RENAME_LIST_HEADER="Branches locales sur ce commit :"
+MSG_BRANCH_RENAME_SELECT_PROMPT="Choisis-en une à renommer (nom de branch ou numéro) : "
+MSG_BRANCH_RENAME_NO_INPUT="Aucune saisie ; annulé."
+MSG_BRANCH_RENAME_NOT_IN_LIST_FMT="La branch ’%s’ n’est pas dans la liste de ce commit.\n"
+MSG_BRANCH_RENAME_NEW_NAME_PROMPT="Nouveau nom : "
+MSG_BRANCH_RENAME_INVALID_NAME_FMT="Nom de branch invalide : %s\n"
+MSG_BRANCH_RENAME_EXISTS_FMT="Branch déjà existante : %s\n"
+MSG_BRANCH_RENAME_DONE_FMT="Renommée : %s → %s\n"
+MSG_BRANCH_RENAME_REMOTE_PROMPT_FMT="Renommer aussi sur le remote [%s] (push nouveau + delete ancien) ? [y/N] "
+MSG_BRANCH_RENAME_REMOTE_DONE="Renommage remote terminé."
+
+# ── copy-branch-name.sh ─────────────────────────────────────────
+MSG_COPY_BRANCH_TITLE="copy-branch-name (copier dans le presse-papiers un nom de branch pointant sur ce commit)"
+MSG_COPY_BRANCH_PURPOSE="Quoi : place un nom de branch dans le presse-papiers système pour le coller ailleurs"
+MSG_COPY_BRANCH_WHEN="Quand : envoyer le nom en chat / coller dans une description de PR / utiliser dans un autre terminal"
+MSG_COPY_BRANCH_NOTE="Note : utilise pbcopy (macOS) / wl-copy / xclip / xsel — selon ce qui est disponible"
+MSG_COPY_BRANCH_NONE="Aucune branch locale sur ce commit à copier."
+MSG_COPY_BRANCH_LIST_HEADER="Branches locales sur ce commit :"
+MSG_COPY_BRANCH_SELECT_PROMPT="Choisis-en une (nom de branch ou numéro) : "
+MSG_COPY_BRANCH_NO_INPUT="Aucune saisie ; annulé."
+MSG_COPY_BRANCH_NOT_IN_LIST_FMT="La branch ’%s’ n’est pas dans la liste de ce commit.\n"
+MSG_COPY_BRANCH_DONE_FMT="Copié : %s\n"
+MSG_COPY_BRANCH_NO_CLIPBOARD="Aucun utilitaire de presse-papiers trouvé (besoin de pbcopy / wl-copy / xclip / xsel). Nom de branch affiché ci-dessous :"
+
+# ── copy-commit-message.sh ──────────────────────────────────────
+MSG_COPY_MSG_TITLE="copy-commit-message (copier le message de ce commit dans le presse-papiers)"
+MSG_COPY_MSG_PURPOSE="Quoi : place le sujet (une ligne) ou le message complet du commit dans le presse-papiers système"
+MSG_COPY_MSG_WHEN="Quand : coller dans une note de release / PR / chat / e-mail"
+MSG_COPY_MSG_NOTE="Note : utilise pbcopy (macOS) / wl-copy / xclip / xsel — selon ce qui est disponible"
+MSG_COPY_MSG_KIND_PROMPT="Copier le [s]ujet (par défaut) / [f] message complet : "
+MSG_COPY_MSG_KIND_INVALID_FMT="Choix invalide : %s\n"
+MSG_COPY_MSG_DONE_FMT='Copié : %s\n'
+MSG_COPY_MSG_NO_CLIPBOARD="Aucun utilitaire de presse-papiers trouvé (besoin de pbcopy / wl-copy / xclip / xsel). Message affiché ci-dessous :"
