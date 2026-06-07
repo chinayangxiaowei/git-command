@@ -43,7 +43,7 @@ short=$(git rev-parse --short HEAD)
 
 # Case 1: review 类 0 worktree → exit 0
 out=$(echo "" | bash "$SCRIPT" review 2>&1) && ec=0 || ec=$?
-if [ "$ec" -eq 0 ] && echo "$out" | grep -q "没有 worktree 可删"; then
+if [ "$ec" -eq 0 ] && echo "$out" | grep -qE "(has no worktree to remove|没有 worktree 可删)"; then
   mark_pass "[review] 0 worktree 正常退出"
 else
   mark_fail "[review] 应正常退出 ec=$ec"
@@ -83,7 +83,7 @@ fi
 # Case 5: 输入不在列表的名字 → exit 1
 git worktree add -b "fix/realone" "$SB/fix/realone" "$SHA" >/dev/null 2>&1
 out=$(printf 'fix/nonexistent\n' | bash "$SCRIPT" fix 2>&1) && ec=0 || ec=$?
-if [ "$ec" -ne 0 ] && echo "$out" | grep -q "不在.*worktree 列表里"; then
+if [ "$ec" -ne 0 ] && echo "$out" | grep -qE "(is not in the .* worktree list|不在.*worktree 列表里)"; then
   mark_pass "[fix] 拒绝列表外名字"
 else
   mark_fail "[fix] 应拒绝 ec=$ec"

@@ -1,20 +1,17 @@
 #!/usr/bin/env bash
-# worktree-from.sh — 从此 commit 在新 worktree 检出
-# 用法: bash worktree-from.sh <purpose> <SHA>
+# worktree-from.sh — check out this commit in a new worktree
+# Usage: bash worktree-from.sh <purpose> <SHA>
 #   <purpose> ∈ {review, try, fix, feat, hot}
 
-# Slug 化 commit subject 用于分支名 / 路径
-# 规则:
-#   - 替换为 -: 空格 tab 控制字符 ~^:?*[\ /
-#   - 保留: ()  .  _  字母数字  中文  emoji 等其他 git 允许字符
-#   - 折叠连续 -、去首尾 -
+# Slugify a commit subject for use as a branch / path name.
+# Rules:
+#   - replace with -: space, tab, control chars, ~^:?*[\, and /
+#   - keep: ()  .  _  alphanumerics  Chinese  emoji  other allowed chars
+#   - collapse repeated -; trim leading/trailing -
 slug() {
   local s="$1"
-  # 替换控制字符 / 空白 / git 非法字符 / 斜杠为 -
   s=$(printf '%s' "$s" | sed -e 's/[[:cntrl:][:space:]~^:?*[\\/]/-/g')
-  # 折叠连续 -
   while [[ "$s" == *--* ]]; do s="${s//--/-}"; done
-  # 去首尾 -
   s="${s#-}"
   s="${s%-}"
   printf '%s' "$s"
@@ -43,9 +40,9 @@ main() {
     exit 1
   fi
 
-  show_intro "worktree-from [$purpose]" \
-    "作用: 从此 commit 在新 worktree 检出（按 purpose 分组）" \
-    "purpose: $purpose"
+  show_intro "$(printf "$MSG_WT_FROM_TITLE_FMT" "$purpose")" \
+    "$MSG_WT_FROM_PURPOSE" \
+    "$(printf "$MSG_WT_FROM_NOTE_FMT" "$purpose")"
   print_header "$SHA"
 
   local short_sha
@@ -59,16 +56,16 @@ main() {
     abs_path="$container/$rel_path"
 
     if [ -e "$abs_path" ]; then
-      echo "路径已存在: $abs_path" >&2
-      echo "提示: git worktree list  查看现有" >&2
+      printf "$MSG_WT_FROM_PATH_EXISTS_FMT" "$abs_path" >&2
+      echo "$MSG_WT_FROM_PATH_HINT" >&2
       exit 1
     fi
 
     git worktree add --detach "$abs_path" "$SHA"
 
     echo
-    echo "✓ worktree created: $abs_path"
-    echo "  清理: git worktree remove \"$abs_path\""
+    printf "$MSG_WT_FROM_CREATED_FMT" "$abs_path"
+    printf "$MSG_WT_FROM_CLEANUP_REVIEW_FMT" "$abs_path"
     command -v zed >/dev/null && zed "$abs_path" || true
     exit 0
   fi
@@ -88,34 +85,36 @@ main() {
     branch="$rel_path"
 
     if [ -e "$abs_path" ]; then
-      echo "路径已存在: $abs_path" >&2; exit 1
+      printf "$MSG_WT_FROM_PATH_EXISTS_FMT" "$abs_path" >&2
+      exit 1
     fi
     if git show-ref --verify --quiet "refs/heads/$branch"; then
-      echo "分支已存在: $branch" >&2; exit 1
+      printf "$MSG_WT_FROM_BRANCH_EXISTS_FMT" "$branch" >&2
+      exit 1
     fi
 
     git worktree add -b "$branch" "$abs_path" "$SHA"
 
     echo
-    echo "✓ worktree created: $abs_path"
-    echo "  分支: $branch"
-    echo "  清理: git worktree remove \"$abs_path\" && git branch -D \"$branch\""
+    printf "$MSG_WT_FROM_CREATED_FMT" "$abs_path"
+    printf "$MSG_WT_FROM_BRANCH_LABEL_FMT" "$branch"
+    printf "$MSG_WT_FROM_CLEANUP_BRANCH_FMT" "$abs_path" "$branch"
     command -v zed >/dev/null && zed "$abs_path" || true
     exit 0
   fi
 
-  # fix / feat / hot — 用户输入 name，默认 slug(subject)-short_sha
+  # fix / feat / hot — user input, default slug(subject)-short_sha
   local subject default_name name
   subject=$(git log -1 --format='%s' "$SHA")
   default_name="$(slug "$subject")-${short_sha}"
-  # slug 全删空时 fallback 到 base-slug
   if [ "$default_name" = "-${short_sha}" ]; then
     default_name="${base_slug}-${short_sha}"
   fi
 
-  read -erp "分支名（回车=${default_name}）: " name
+  prompt=$(printf "$MSG_WT_FROM_NAME_PROMPT_FMT" "$default_name")
+  read -erp "$prompt" name
   name="${name:-$default_name}"
-  name="$(slug "$name")"   # 再次 sanitize 防用户输入非法字符
+  name="$(slug "$name")"
   if [ -z "$name" ]; then
     name="${base_slug}-${short_sha}"
   fi
@@ -125,22 +124,23 @@ main() {
   branch="$rel_path"
 
   if [ -e "$abs_path" ]; then
-    echo "路径已存在: $abs_path" >&2; exit 1
+    printf "$MSG_WT_FROM_PATH_EXISTS_FMT" "$abs_path" >&2
+    exit 1
   fi
   if git show-ref --verify --quiet "refs/heads/$branch"; then
-    echo "分支已存在: $branch" >&2; exit 1
+    printf "$MSG_WT_FROM_BRANCH_EXISTS_FMT" "$branch" >&2
+    exit 1
   fi
 
   git worktree add -b "$branch" "$abs_path" "$SHA"
 
   echo
-  echo "✓ worktree created: $abs_path"
-  echo "  分支: $branch"
-  echo "  清理: git worktree remove \"$abs_path\" && git branch -D \"$branch\""
+  printf "$MSG_WT_FROM_CREATED_FMT" "$abs_path"
+  printf "$MSG_WT_FROM_BRANCH_LABEL_FMT" "$branch"
+  printf "$MSG_WT_FROM_CLEANUP_BRANCH_FMT" "$abs_path" "$branch"
   command -v zed >/dev/null && zed "$abs_path" || true
 }
 
-# Source guard: 仅作为脚本直接执行时跑 main
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   main "$@"
 fi

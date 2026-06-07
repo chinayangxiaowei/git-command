@@ -304,3 +304,88 @@ MSG_CFIX_TARGET_LABEL="目标:"
 MSG_CFIX_RANGE_LABEL="rebase 范围 (旧→新):"
 MSG_CFIX_CONTINUE="继续？"
 MSG_CFIX_DONE="完成。源已折叠进目标 (目标 commit 已更新 SHA)。"
+
+# ── rebase-branch-onto.sh ───────────────────────────────────────
+MSG_RBO_TITLE="rebase-branch-onto（把分支 A 变基到分支 B 上）"
+MSG_RBO_PURPOSE="作用: git switch A && git rebase B；A 的独有 commit 会重放到 B 顶部"
+MSG_RBO_WHEN="场景: A 是 feature 分支、B 是 main/develop；想把 A 跟上 B 的最新进度"
+MSG_RBO_NOTE="注意: A 上的 commit 会被重写 (新 SHA)；冲突时自动 abort 回滚"
+MSG_RBO_DIRTY_TREE="工作区有未提交改动，请先 commit 或 stash。"
+MSG_RBO_LOCAL_BRANCHES="本地分支："
+MSG_RBO_A_PROMPT_FMT='分支 A（要被变基的分支，回车=当前 %s）：'
+MSG_RBO_DETACHED_ERR="当前是 detached HEAD，必须明确指定分支 A。"
+MSG_RBO_NO_LOCAL_FMT='本地不存在分支：%s\n'
+MSG_RBO_B_PROMPT="分支 B（变基的目标基准；可以是本地分支 / 远端分支 / tag）："
+MSG_RBO_NO_INPUT="未输入，已取消。"
+MSG_RBO_INVALID_REF_FMT='无效的目标 ref：%s\n'
+MSG_RBO_SAME="A 和 B 指向同一 commit，无需变基。"
+MSG_RBO_PREVIEW="─── 预览 ───"
+MSG_RBO_NO_EXCLUSIVE="A 没有 B 之外的 commit（A 是 B 的祖先或同一点）。"
+MSG_RBO_FF_OR_NOOP="rebase 会变成 fast-forward 或 no-op。"
+MSG_RBO_REPLAY_FMT='A 上将被重放的 commit (%d 条)：\n'
+MSG_RBO_CONFIRM_FMT='继续：git switch %s && git rebase %s ？'
+MSG_RBO_SWITCHING_FMT='切换到 %s...\n'
+MSG_RBO_DONE="完成。"
+
+# ── tag.sh ──────────────────────────────────────────────────────
+MSG_TAG_TITLE="tag（给此 commit 打 tag）"
+MSG_TAG_PURPOSE="作用: 创建轻量或 annotated tag 指向此 commit；可选立即 push 到远端"
+MSG_TAG_WHEN="场景: release 节点 / 重要里程碑 / 给某 commit 一个稳定的命名引用"
+MSG_TAG_CONTRAST="区别: annotated 带 message+作者+时间（推荐 release）；lightweight 只是个 ref"
+MSG_TAG_NAME_PROMPT="tag 名字（例：v1.0.0 / release-2024-01）："
+MSG_TAG_NO_INPUT="未输入，已取消。"
+MSG_TAG_EXISTS_FMT='tag 已存在：%s\n'
+MSG_TAG_KIND_PROMPT="annotated（带 message）还是 lightweight？[a]/l（默认 a）："
+MSG_TAG_MSG_PROMPT="tag message（回车 = 用 tag 名字）："
+MSG_TAG_CREATED_FMT='已创建 tag：%s → %s\n'
+MSG_TAG_PUSH_PROMPT_FMT='推送到远端 [%s]？[y/N] '
+MSG_TAG_NO_REMOTE="（没有 remote，跳过 push）"
+MSG_TAG_REFRESH_HINT="提示：Zed Git Graph 不监听 tag 变化，需手动刷新（cmd+shift+P → reload window 或下次 commit 时自动刷）。"
+
+# ── tag-delete.sh ───────────────────────────────────────────────
+MSG_TAG_DELETE_TITLE="tag-delete（删除 tag）"
+MSG_TAG_DELETE_PURPOSE="作用: 删本地 tag，可选同时删远端 tag"
+MSG_TAG_DELETE_WHEN="场景: 错打 / release 重发 / 清理无用 tag"
+MSG_TAG_DELETE_NOTE="注意: 已 push 的远端 tag 删除会影响其他人；本地+远端分两步问"
+MSG_TAG_DELETE_AT_HEADER="此 commit 上的 tag："
+MSG_TAG_DELETE_NONE="  (无)"
+MSG_TAG_DELETE_NAME_PROMPT="要删的 tag 名字（也可以是其它 commit 上的 tag）："
+MSG_TAG_DELETE_NO_INPUT="未输入，已取消。"
+MSG_TAG_DELETE_NOT_EXIST_FMT='tag 不存在：%s\n'
+MSG_TAG_DELETE_ANNOTATED="(annotated tag)"
+MSG_TAG_DELETE_PREVIEW_FMT="tag '%s' → %s  %s\n"
+MSG_TAG_DELETE_CONFIRM_FMT="删除本地 tag '%s'？"
+MSG_TAG_DELETE_LOCAL_DONE="本地 tag 已删除。"
+MSG_TAG_DELETE_NO_REMOTE="（没有 remote，跳过远端）"
+MSG_TAG_DELETE_REMOTE_ABSENT_FMT="（远端 [%s] 上没有此 tag，跳过）\n"
+MSG_TAG_DELETE_REMOTE_PROMPT_FMT="也从远端 [%s] 删除？[y/N] "
+MSG_TAG_DELETE_REMOTE_DONE="远端 tag 已删除。"
+
+# ── worktree-from.sh ────────────────────────────────────────────
+MSG_WT_FROM_TITLE_FMT="worktree-from [%s]"
+MSG_WT_FROM_PURPOSE="作用: 从此 commit 在新 worktree 检出（按 purpose 分组）"
+MSG_WT_FROM_NOTE_FMT='purpose: %s'
+MSG_WT_FROM_PATH_EXISTS_FMT='路径已存在: %s\n'
+MSG_WT_FROM_PATH_HINT="提示: 跑  git worktree list  查看现有 worktree"
+MSG_WT_FROM_BRANCH_EXISTS_FMT='分支已存在: %s\n'
+MSG_WT_FROM_CREATED_FMT='✓ worktree 已创建: %s\n'
+MSG_WT_FROM_BRANCH_LABEL_FMT='  分支: %s\n'
+MSG_WT_FROM_CLEANUP_REVIEW_FMT='  清理: git worktree remove "%s"\n'
+MSG_WT_FROM_CLEANUP_BRANCH_FMT='  清理: git worktree remove "%s" && git branch -D "%s"\n'
+MSG_WT_FROM_NAME_PROMPT_FMT='分支名（回车=%s）: '
+
+# ── worktree-remove.sh ──────────────────────────────────────────
+MSG_WT_RM_TITLE_FMT="worktree-remove [%s]"
+MSG_WT_RM_PURPOSE_FMT="作用: 列出 [%s] 下的 worktree，由用户复制粘贴名字来删除"
+MSG_WT_RM_USAGE_FMT="用法: 看下面列表，复制要删的那一行的名字（含 %s/ 前缀），粘贴到输入框"
+MSG_WT_RM_EMPTY_FMT='[%s] 下没有 worktree 可删。\n'
+MSG_WT_RM_LIST_HEADER_FMT='[%s] 下的 worktree:\n'
+MSG_WT_RM_NAME_PROMPT="粘贴要删的 worktree 名字（完整复制上面某一行）: "
+MSG_WT_RM_NO_INPUT="未输入，已取消。"
+MSG_WT_RM_NOT_IN_LIST_FMT="'%s' 不在 [%s] worktree 列表里。\n"
+MSG_WT_RM_REMOVING_FMT='正在删除: %s\n'
+MSG_WT_RM_DONE="✓ worktree 已删除。"
+MSG_WT_RM_REVIEW_NO_BRANCH="(review 是 detached，无分支需要清理)"
+MSG_WT_RM_ALSO_DEL_BRANCH_FMT="也删本地分支 '%s'？[y/N] "
+MSG_WT_RM_BRANCH_DONE="✓ 本地分支已删除。"
+MSG_WT_RM_BRANCH_ABSENT_FMT="(分支 '%s' 不存在，可能 git worktree remove 已带走)\n"
