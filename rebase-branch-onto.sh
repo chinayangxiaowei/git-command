@@ -46,7 +46,7 @@ read -erp "$MSG_RBO_B_PROMPT" branch_b
 branch_b="${branch_b// /}"
 if [[ -z "$branch_b" ]]; then
   echo "$MSG_RBO_NO_INPUT"
-  exit 130
+  exit 0
 fi
 
 if ! git rev-parse --verify --quiet "$branch_b" >/dev/null 2>&1; then

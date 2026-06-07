@@ -15,7 +15,7 @@ read -rp "$MSG_BRANCH_FROM_NAME_PROMPT" name
 name="${name// /}"
 if [[ -z "$name" ]]; then
   echo "$MSG_BRANCH_FROM_NO_NAME"
-  exit 130
+  exit 0
 fi
 
 git switch -c "$name" "$SHA"

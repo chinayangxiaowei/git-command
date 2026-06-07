@@ -50,7 +50,7 @@ name="${name## }"; name="${name%% }"
 name="${name#  }"; name="${name#  }"
 if [ -z "$name" ]; then
   echo "$MSG_WT_RM_NO_INPUT"
-  exit 130
+  exit 0
 fi
 
 found=no

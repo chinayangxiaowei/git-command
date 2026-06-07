@@ -37,7 +37,7 @@ printf "$MSG_RESET_HARD_YES_PROMPT_FMT" "$target_short"
 read -r ans
 if [[ "$ans" != "YES" ]]; then
   echo "$MSG_RESET_HARD_NO_YES"
-  exit 130
+  exit 0
 fi
 
 echo

@@ -15,7 +15,7 @@ read -erp "$MSG_TAG_NAME_PROMPT" name
 name="${name// /}"
 if [[ -z "$name" ]]; then
   echo "$MSG_TAG_NO_INPUT"
-  exit 130
+  exit 0
 fi
 
 if git rev-parse --verify --quiet "refs/tags/$name" >/dev/null; then

@@ -46,7 +46,9 @@ confirm() {
   read -rp "$prompt [y/N] " ans
   if [[ ! "$ans" =~ ^[yY] ]]; then
     echo "已取消。"
-    exit 130
+    # User-initiated cancellation is a successful exit, not a failure —
+    # this lets Zed's hide:on_success collapse the pane normally.
+    exit 0
   fi
 }
 
@@ -82,12 +84,14 @@ run_or_abort() {
   fi
 }
 
-# 注册信号回滚（EXIT trap 在文件底部已经自动注册了，这里只处理信号）
+# 注册信号回滚（EXIT 和 INT trap 在文件底部已经自动注册了，这里只处理 TERM/HUP）
+# INT 由 _lib_handle_int 智能处理（idle Ctrl+C → exit 0；mid-op Ctrl+C → exit 130
+# 让 EXIT trap 走 abort 分支）。这里不再覆盖 INT，否则改历史的脚本会丢失智能判断。
 # 用法：enable_failure_rollback   # 在 ensure_clean_state 之后调用一次
 enable_failure_rollback() {
-  trap 'exit 130' INT   # Ctrl+C
   trap 'exit 143' TERM  # kill / Zed 关 task
   trap 'exit 129' HUP   # 终端 / pane 关闭
+  trap 'exit 131' QUIT  # Ctrl+\  (rare but possible)
 }
 
 # (legacy helper, kept for backwards compat — most scripts get auto-pause
@@ -191,6 +195,38 @@ _lib_cleanup_on_exit() {
   read -r -p "$MSG_LIB_PRESS_ENTER" _ || true
 }
 
+# Smart SIGINT handler — Ctrl+C while idle (waiting for read) is a clean
+# user cancel → exit 0 so Zed's hide:on_success collapses the pane.
+# Ctrl+C while a rebase/cherry-pick/revert/merge is mid-op → exit 130 so the
+# EXIT trap rolls it back.
+_lib_handle_int() {
+  local gdir kind=""
+  gdir="$(git rev-parse --git-dir 2>/dev/null || true)"
+  if [ -n "$gdir" ]; then
+    if [ -d "$gdir/rebase-merge" ] || [ -d "$gdir/rebase-apply" ]; then
+      kind=rebase
+    elif [ -f "$gdir/CHERRY_PICK_HEAD" ]; then
+      kind=cherry-pick
+    elif [ -f "$gdir/REVERT_HEAD" ]; then
+      kind=revert
+    elif [ -f "$gdir/MERGE_HEAD" ]; then
+      kind=merge
+    fi
+  fi
+  if [ -n "$kind" ]; then
+    # Mid-op: hand off to the EXIT trap's abort branch
+    exit 130
+  fi
+  # Idle state: treat as a successful user-initiated cancel.
+  # Set the done flag so the EXIT trap skips both the abort branch AND
+  # the wait-to-close read (we don't want to ask the user to press Enter
+  # after they've already pressed Ctrl+C).
+  _GIT_CMD_DONE=1
+  echo
+  exit 0
+}
+
 # 自动 EXIT trap — 任何 source lib.sh 的脚本都获得"成功后按 Enter 关闭"行为
 # 反馈在终端外的脚本（copy / open-files）应在顶部 export GIT_COMMAND_NO_PAUSE=1
 trap '_lib_cleanup_on_exit' EXIT
+trap '_lib_handle_int' INT

@@ -20,7 +20,7 @@ echo
 read -erp "$MSG_STASH_PUSH_NAME_PROMPT" name
 if [[ -z "$name" ]]; then
   echo "$MSG_STASH_PUSH_NO_NAME"
-  exit 130
+  exit 0
 fi
 
 git stash push -m "$name"

@@ -259,9 +259,16 @@ teardown_sb
 
 setup_sb
 SHA=$(git rev-parse HEAD~1)
+HEAD_before=$(git rev-parse HEAD)
 out=$(printf 'yes\n' | bash "$DIR/reset-hard.sh" "$SHA" 2>&1) && ec=0 || ec=$?
-[ "$ec" -ne 0 ] && echo "$out" | grep -qE "(YES not typed|未输入 YES)" \
-  && ok "reset-hard refuses lowercase yes" || fail_ "reset-hard lowercase ec=$ec"
+# User-cancel now exits 0 (it's a user choice, not an error). Just verify
+# HEAD did NOT actually move — that's the safety we care about.
+if [ "$ec" -eq 0 ] && echo "$out" | grep -qE "(YES not typed|未输入 YES)" \
+   && [ "$(git rev-parse HEAD)" = "$HEAD_before" ]; then
+  ok "reset-hard refuses lowercase yes (HEAD unchanged)"
+else
+  fail_ "reset-hard lowercase ec=$ec HEAD_changed=$([ $(git rev-parse HEAD) = $HEAD_before ] && echo no || echo YES)"
+fi
 teardown_sb
 
 # ───────────────────────────────────────────────────────────────

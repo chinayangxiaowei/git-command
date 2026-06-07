@@ -36,7 +36,7 @@ else
   name="${name// /}"
   if [ -z "$name" ]; then
     echo "$MSG_COPY_BRANCH_NO_INPUT"
-    exit 130
+    exit 0
   fi
   if [[ "$name" =~ ^[0-9]+$ ]] && [ "$name" -ge 1 ] && [ "$name" -le "${#branches[@]}" ]; then
     name="${branches[$((name-1))]}"
