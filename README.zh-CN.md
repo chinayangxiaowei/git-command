@@ -79,6 +79,8 @@ project/
 
 好处：feature 分支可以并行检出到 `feature-x/` 等多个 worktree，互不干扰。
 
+新建一个该布局的项目，跑独立工具：`bash <路径>/init-bare-tree.sh <name> [<clone-url>]`（sync-tasks.sh 已经把它部署到 `~/.config/zed/git-command/`；可以 symlink 到 PATH 方便调用）。
+
 ## 开发者注意
 
 - 目标 shell 是 macOS 自带的 **bash 3.2.57**。不要用 `mapfile` / `${var^}` / `${var,}` / 关联数组等 bash 4+ 特性。
