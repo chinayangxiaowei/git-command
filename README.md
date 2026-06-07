@@ -20,21 +20,30 @@ JetBrains-style Git operation scripts for [Zed](https://zed.dev)'s Git Graph rig
 ```bash
 git clone https://github.com/chinayangxiaowei/git-command.git ~/git-command   # any path
 cd ~/git-command
-./sync-tasks.sh
+./sync-tasks.sh           # English (default)
+# or pick a language:
+./sync-tasks.sh zh        # 简体中文
+./sync-tasks.sh ja        # 日本語
+./sync-tasks.sh pt-BR     # Português Brasil
+# 10 languages available: en / zh / zh-TW / ja / ko / pt-BR / es / de / fr / ru
 ```
 
-`sync-tasks.sh` does two things:
+`sync-tasks.sh` does four things:
 
 1. Copies every `*.sh` to `~/.config/zed/git-command/`
-2. Renders the `__GIT_COMMAND_DIR__` placeholder in `tasks.json` with the path above,
-   writing the result to `~/.config/zed/tasks.json`
+2. Copies the chosen `lang/<code>.sh` as `lang.sh` next to the scripts (runtime messages)
+3. Renders the `__GIT_COMMAND_DIR__` placeholder in `tasks.json` with the install path,
+   substitutes all 46 `__LABEL_*__` placeholders with the chosen language's menu labels,
+   and writes the result to `~/.config/zed/tasks.json`
+4. Symlinks `init-bare-tree` into `~/.local/bin/` (if that directory is on your PATH) so
+   bootstrapping a new bare+worktree project becomes a one-word command
 
-Then in Zed run `Cmd+Shift+P` → `reload window`. The 37 commands now appear in the Git Graph right-click menu of every project.
+Then in Zed run `Cmd+Shift+P` → `reload window`. The 41 commands now appear in the Git Graph right-click menu of every project.
 
 Want a different install location? Override via env var:
 
 ```bash
-TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
+TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh zh
 ```
 
 ## Menu Inventory
@@ -55,14 +64,16 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
 
 ## Safety Design
 
-Every history-rewriting script runs under two layers of protection:
+Every script that sources `lib.sh` gets these guarantees automatically:
 
-- **`ensure_clean_state`** — refuses to start if a rebase / cherry-pick / revert / merge is already in progress
-- **`enable_failure_rollback`** — registers `EXIT` / `INT` / `TERM` / `HUP` traps; any non-zero exit while a rebase-like state is detected auto-triggers `--abort` cleanup
+- **`ensure_clean_state`** — refuses to start if a rebase / cherry-pick / revert / merge is already in progress (prevents stacking mid-op state)
+- **EXIT trap auto-rollback** — registered at the top of `lib.sh`. On non-zero exit, if a rebase-like state is detected the trap runs `git <kind> --abort` and prints a clear "auto-rolled back" message. On signals, `enable_failure_rollback` adds `INT` / `TERM` / `HUP` handlers that exit with a non-zero code and feed back into the same EXIT trap.
+- **`_GIT_CMD_DONE=1` short-circuit** — after the script's main work finishes successfully, the trap sets this flag before the `wait_to_close` prompt. A subsequent Ctrl+C or pane close during the wait will *not* trigger a spurious rollback — the work already succeeded.
+- **`run_or_abort`** — wraps a single git subcommand; on failure prints why and runs the matching `--abort` before exiting
 
 Only `SIGKILL` / power loss can bypass this (POSIX limitation).
 
-Each script's entry point uses `show_intro` to print "what it does / when to use it / caveats", then prompts for a `y/N` confirm before touching anything.
+Each script's entry point uses `show_intro` to print "what it does / when to use it / caveats", then prompts for a `y/N` confirm before touching anything. On success the script blocks on "press Enter to close" so you can read the final output, then Zed's `hide: on_success` collapses the pane.
 
 ## Project Layout
 
@@ -82,18 +93,23 @@ To bootstrap a new project in this layout, run `init-bare-tree <name> [<clone-ur
 ## Notes for Contributors
 
 - Target shell is macOS's stock **bash 3.2.57**. Avoid bash 4+ features (`mapfile`, `${var^}` / `${var,}`, associative arrays).
-- New scripts should `source lib.sh` and reuse its seven helpers (`show_intro` / `print_header` / `confirm` / `ensure_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout`).
-- History-rewriting scripts must compose `ensure_clean_state` + `enable_failure_rollback`.
+- New scripts should `source lib.sh` and reuse its helpers: `show_intro` / `print_header` / `confirm` / `ensure_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout` / `wait_to_close` / `copy_to_clipboard` / `maybe_open_in_zed`.
+- History-rewriting scripts add `ensure_clean_state` + `enable_failure_rollback` near the top. The EXIT trap is registered globally by `lib.sh` itself, so the wait-to-close + abort-on-failure behavior is automatic.
+- Side-effect-only scripts (clipboard, opens-in-editor) should `export GIT_COMMAND_NO_PAUSE=1` near the top to skip the closing prompt — there's no terminal output worth reading.
+- All user-visible strings live in `lang/<code>.sh` (runtime messages, `MSG_*`) and `lang/labels-<code>.sh` (menu labels, `LABEL_*`). Adding a new language: copy `lang/en.sh` + `lang/labels-en.sh`, translate, then `./test/verify-translations.sh` will catch dropped variables or `%s/%d` mismatches.
 
 ## Tests
 
 ```bash
-bash test/test-worktree-from.sh    # 19 assertions
-bash test/test-branch-delete.sh    # 6 assertions
-bash test/test-worktree-remove.sh  # 6 assertions
+bash test/test-all.sh                # 42 assertions — happy path + boundaries across 8 scripts
+bash test/test-rollback.sh           # 10 assertions — EXIT trap / auto-abort / ensure_clean_state
+bash test/test-chains.sh             # 12 assertions — branch / worktree / stash chained workflows
+bash test/test-edge.sh               #  9 assertions — VIEW wrappers / detached HEAD / empty commit / CJK+emoji slug
+bash test/test-history-rewrite.sh    # 19 assertions — all 12 history-rewriting scripts
+bash test/verify-translations.sh     # 90 assertions — i18n parity across 10 languages
 ```
 
-No external test framework — pure bash + git in `mktemp` sandboxes.
+Total: **182 assertions**, all pure bash + git in `mktemp` sandboxes — no external framework, no flaky network.
 
 ## Known Limitations (upstream Zed)
 

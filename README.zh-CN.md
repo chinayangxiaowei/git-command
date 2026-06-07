@@ -21,21 +21,30 @@
 ```bash
 git clone https://github.com/chinayangxiaowei/git-command.git ~/git-command   # 路径任意
 cd ~/git-command
-./sync-tasks.sh
+./sync-tasks.sh           # 默认英文
+# 也可以选语言：
+./sync-tasks.sh zh        # 简体中文
+./sync-tasks.sh zh-TW     # 繁體中文
+./sync-tasks.sh ja        # 日本語
+# 10 种语言可选: en / zh / zh-TW / ja / ko / pt-BR / es / de / fr / ru
 ```
 
-`sync-tasks.sh` 做两件事：
+`sync-tasks.sh` 做四件事：
 
 1. 把所有 `*.sh` 拷到 `~/.config/zed/git-command/`
-2. 用上面那个目录渲染 `tasks.json` 里的 `__GIT_COMMAND_DIR__` 占位符，
+2. 把选中的 `lang/<code>.sh` 复制成同目录下的 `lang.sh`（脚本运行时的文案）
+3. 用安装目录渲染 `tasks.json` 里的 `__GIT_COMMAND_DIR__` 占位符，
+   再用所选语言的菜单文本替换所有 46 个 `__LABEL_*__` 占位符，
    结果写到 `~/.config/zed/tasks.json`
+4. 如果 `~/.local/bin/` 在你的 PATH 里，把 `init-bare-tree` symlink 过去，
+   让新建 bare+worktree 项目变成一条命令的事
 
-之后在 Zed 里 `Cmd+Shift+P` → `reload window`，所有项目的 Git Graph 右键菜单都会出现这 37 条命令。
+之后在 Zed 里 `Cmd+Shift+P` → `reload window`，所有项目的 Git Graph 右键菜单都会出现这 41 条命令。
 
 需要换装位置？覆盖环境变量：
 
 ```bash
-TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
+TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh zh
 ```
 
 ## 菜单内容
@@ -56,14 +65,16 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
 
 ## 安全设计
 
-所有改写历史的脚本走两层保护：
+任何 `source lib.sh` 的脚本都自动获得以下保证：
 
-- **`ensure_clean_state`** — 启动前如果检测到 rebase / cherry-pick / revert / merge 进行中，直接拒绝运行
-- **`enable_failure_rollback`** — 注册 EXIT / INT / TERM / HUP trap，任何非零退出 + 检测到残留 rebase 状态都会自动 `--abort` 清理
+- **`ensure_clean_state`** — 启动前如果检测到 rebase / cherry-pick / revert / merge 进行中，直接拒绝运行（防止半成品状态叠加）
+- **EXIT trap 自动回滚** — 由 `lib.sh` 顶层注册。非零退出时如果发现还在 rebase 类状态，trap 会自动跑 `git <kind> --abort` 并打印"已自动回滚"提示。对信号则由 `enable_failure_rollback` 注册 `INT` / `TERM` / `HUP` 处理器统一翻成非零退出，再走 EXIT trap。
+- **`_GIT_CMD_DONE=1` 短路** — 主流程成功完成后、进入 `wait_to_close` 提示前，trap 把这个标记置位。之后用户 Ctrl+C 或关 pane 都不会触发误回滚——业务已经成功。
+- **`run_or_abort`** — 包一层 git 子命令；命令失败时友好报错并跑对应的 `--abort` 再退出
 
 只有 `SIGKILL` / 断电这种不可拦截信号无法回滚（POSIX 限制）。
 
-每个脚本顶部都会用 `show_intro` 打印"做什么 / 何时用 / 注意点"，二次确认后才开干。
+每个脚本顶部都会用 `show_intro` 打印"做什么 / 何时用 / 注意点"，二次确认后才开干。成功完成后脚本会停在 "按 Enter 关闭" 等你看完输出，然后 Zed 的 `hide: on_success` 把 pane 自动收掉。
 
 ## 项目布局
 
@@ -84,16 +95,23 @@ project/
 ## 开发者注意
 
 - 目标 shell 是 macOS 自带的 **bash 3.2.57**。不要用 `mapfile` / `${var^}` / `${var,}` / 关联数组等 bash 4+ 特性。
-- 任何新脚本都应该 `source lib.sh` 复用 7 个工具函数（`show_intro` / `print_header` / `confirm` / `ensure_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout`）。
-- 动历史的脚本必须组合 `ensure_clean_state` + `enable_failure_rollback`。
+- 新脚本应该 `source lib.sh` 复用以下工具函数：`show_intro` / `print_header` / `confirm` / `ensure_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout` / `wait_to_close` / `copy_to_clipboard` / `maybe_open_in_zed`。
+- 动历史的脚本顶部加 `ensure_clean_state` + `enable_failure_rollback`。EXIT trap 由 `lib.sh` 自身在顶层注册，wait-to-close + 失败自动 abort 行为是自动的。
+- 反馈在终端外的脚本（剪贴板 / 在编辑器打开）顶部 `export GIT_COMMAND_NO_PAUSE=1`，跳过结尾的按键提示——没什么 terminal 输出值得读。
+- 所有用户可见文本放在 `lang/<code>.sh`（运行时文案 `MSG_*`）和 `lang/labels-<code>.sh`（菜单 label `LABEL_*`）里。加新语言：复制 `lang/en.sh` + `lang/labels-en.sh`，翻译，然后跑 `./test/verify-translations.sh` 会自动检查变量数和 `%s/%d` 一致性。
 
 ## 测试
 
 ```bash
-bash test/test-worktree-from.sh    # 19 assertions
-bash test/test-branch-delete.sh    # 6 assertions
-bash test/test-worktree-remove.sh  # 6 assertions
+bash test/test-all.sh                # 42 assertions — 8 个核心脚本的 happy path + 边界
+bash test/test-rollback.sh           # 10 assertions — EXIT trap / 自动 abort / ensure_clean_state
+bash test/test-chains.sh             # 12 assertions — branch / worktree / stash 链式工作流
+bash test/test-edge.sh               #  9 assertions — VIEW wrapper / detached HEAD / 空 commit / CJK+emoji slug
+bash test/test-history-rewrite.sh    # 19 assertions — 12 个改历史脚本全覆盖
+bash test/verify-translations.sh     # 90 assertions — 10 种语言 i18n 对齐
 ```
+
+合计 **182 assertions**，纯 bash + git 在 `mktemp` 沙箱里跑——没用任何外部框架，也没网络依赖。
 
 ## 已知限制（上游 Zed 待修）
 
