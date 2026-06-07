@@ -38,7 +38,7 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
 
 ## 菜单内容
 
-32 个命令分 9 类，由 `tasks.json` 注入到 Zed Git Graph 的 commit 右键菜单。
+37 个命令分 9 类，由 `tasks.json` 注入到 Zed Git Graph 的 commit 右键菜单。
 
 | 类别 | 命令 |
 |------|------|
@@ -50,7 +50,7 @@ TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
 | 分支 | 从此 commit 创建分支、临时试错分支、把分支 A rebase 到分支 B（CLion 风格）、删除指向此 commit 的本地分支（可选远端） |
 | Tag | 创建 tag、删除 tag（含远端） |
 | Stash | 带名字 stash push、pop 最近 stash |
-| Worktree | 从此 commit 在新 worktree 检出（review / try / fix / feat / hot 五种用途，自动命名 + 在新 Zed 窗口打开） |
+| Worktree | 从此 commit 在新 worktree 检出（review / try / fix / feat / hot 五种用途，自动命名 + 在新 Zed 窗口打开）；每种用途配套"删除"菜单项，列出该类型现有 worktree，复制粘贴名字确认 |
 
 ## 安全设计
 

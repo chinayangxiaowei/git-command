@@ -303,5 +303,40 @@
     "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "hot", "$ZED_GIT_SHA"],
     "tags": ["git-command"],
     "reveal": "always"
+  },
+  {
+    "label": "Worktree · 删除  review  (复制粘贴名字确认)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "review"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · 删除  try     (复制粘贴名字确认)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "try"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · 删除  fix     (复制粘贴名字确认)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "fix"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · 删除  feat    (复制粘贴名字确认)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "feat"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
+  {
+    "label": "Worktree · 删除  hot     (复制粘贴名字确认)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "hot"],
+    "tags": ["git-command"],
+    "reveal": "always"
   }
 ]
