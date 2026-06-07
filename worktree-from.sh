@@ -66,7 +66,7 @@ main() {
     echo
     printf "$MSG_WT_FROM_CREATED_FMT" "$abs_path"
     printf "$MSG_WT_FROM_CLEANUP_REVIEW_FMT" "$abs_path"
-    command -v zed >/dev/null && zed "$abs_path" || true
+    maybe_open_in_zed "$abs_path"
     exit 0
   fi
 
@@ -99,7 +99,7 @@ main() {
     printf "$MSG_WT_FROM_CREATED_FMT" "$abs_path"
     printf "$MSG_WT_FROM_BRANCH_LABEL_FMT" "$branch"
     printf "$MSG_WT_FROM_CLEANUP_BRANCH_FMT" "$abs_path" "$branch"
-    command -v zed >/dev/null && zed "$abs_path" || true
+    maybe_open_in_zed "$abs_path"
     exit 0
   fi
 
@@ -138,7 +138,7 @@ main() {
   printf "$MSG_WT_FROM_CREATED_FMT" "$abs_path"
   printf "$MSG_WT_FROM_BRANCH_LABEL_FMT" "$branch"
   printf "$MSG_WT_FROM_CLEANUP_BRANCH_FMT" "$abs_path" "$branch"
-  command -v zed >/dev/null && zed "$abs_path" || true
+  maybe_open_in_zed "$abs_path"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

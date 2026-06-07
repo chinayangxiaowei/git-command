@@ -6,6 +6,9 @@ set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPT="$DIR/worktree-from.sh"
 
+# Don't pop a Zed window for every worktree the test creates
+export GIT_COMMAND_NO_OPEN=1
+
 # Source the script to expose slug() without running main()
 # shellcheck source=/dev/null
 source "$SCRIPT"

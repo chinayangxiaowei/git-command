@@ -96,6 +96,15 @@ enable_failure_rollback() {
   trap 'exit 129' HUP   # 终端 / pane 关闭
 }
 
+# Best-effort: open a path in a new Zed window.
+# Honors GIT_COMMAND_NO_OPEN=1 to skip (used by the test suite to keep
+# Zed from popping up during runs). Never fails the calling script.
+maybe_open_in_zed() {
+  local path="$1"
+  [ "${GIT_COMMAND_NO_OPEN:-}" = "1" ] && return 0
+  command -v zed >/dev/null 2>&1 && zed "$path" || true
+}
+
 # 检测当前 repo 是否为 bare+worktrees 布局，不是则退出
 # 用法：require_bare_layout
 require_bare_layout() {
