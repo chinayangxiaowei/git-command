@@ -82,18 +82,21 @@ run_or_abort() {
   fi
 }
 
-# 全局兜底：注册后，任何非 0 退出（含 Ctrl+C / kill / 终端关闭）
-# 若发现 rebase/cherry-pick/revert/merge 还在进行中 → 自动 abort 回滚。
-# 也清理脚本里名为 $tmpdir 的临时目录（约定俗成）。
-#
-# 前提：调用方必须先跑过 ensure_clean_state，保证「在进行中」状态都是本次脚本造成的。
-#
+# 注册信号回滚（EXIT trap 在文件底部已经自动注册了，这里只处理信号）
 # 用法：enable_failure_rollback   # 在 ensure_clean_state 之后调用一次
 enable_failure_rollback() {
-  trap '_lib_cleanup_on_exit' EXIT
   trap 'exit 130' INT   # Ctrl+C
   trap 'exit 143' TERM  # kill / Zed 关 task
   trap 'exit 129' HUP   # 终端 / pane 关闭
+}
+
+# (legacy helper, kept for backwards compat — most scripts get auto-pause
+# via the EXIT trap registered at the bottom of this file.)
+wait_to_close() {
+  [ "${GIT_COMMAND_NO_PAUSE:-}" = "1" ] && return 0
+  [ ! -t 0 ] && return 0
+  echo
+  read -r -p "$MSG_LIB_PRESS_ENTER" _ || true
 }
 
 # Best-effort: copy a string to the system clipboard.
@@ -151,26 +154,43 @@ _lib_cleanup_on_exit() {
     rm -rf "$tmpdir"
   fi
 
-  # 仅在非 0 退出时检查是否有未完成的 git 操作要 abort
+  # 主流程已完成、正在 wait 阶段被打断 → 不当失败处理，直接退（业务已成功）
+  if [ "${_GIT_CMD_DONE:-}" = "1" ]; then
+    return 0
+  fi
+
+  # 非 0 退出：检查是否有未完成的 git 操作要 abort，然后不暂停（让 user 看到错误）
   if [ "$rc" -ne 0 ]; then
     local gdir kind=""
     gdir="$(git rev-parse --git-dir 2>/dev/null || true)"
-    [ -z "$gdir" ] && return 0
-
-    if [ -d "$gdir/rebase-merge" ] || [ -d "$gdir/rebase-apply" ]; then
-      kind=rebase
-    elif [ -f "$gdir/CHERRY_PICK_HEAD" ]; then
-      kind=cherry-pick
-    elif [ -f "$gdir/REVERT_HEAD" ]; then
-      kind=revert
-    elif [ -f "$gdir/MERGE_HEAD" ]; then
-      kind=merge
+    if [ -n "$gdir" ]; then
+      if [ -d "$gdir/rebase-merge" ] || [ -d "$gdir/rebase-apply" ]; then
+        kind=rebase
+      elif [ -f "$gdir/CHERRY_PICK_HEAD" ]; then
+        kind=cherry-pick
+      elif [ -f "$gdir/REVERT_HEAD" ]; then
+        kind=revert
+      elif [ -f "$gdir/MERGE_HEAD" ]; then
+        kind=merge
+      fi
+      if [ -n "$kind" ]; then
+        echo >&2
+        printf "$MSG_LIB_CLEANUP_FMT" "$rc" "$kind" >&2
+        git "$kind" --abort 2>/dev/null || true
+      fi
     fi
-
-    if [ -n "$kind" ]; then
-      echo >&2
-      printf "$MSG_LIB_CLEANUP_FMT" "$rc" "$kind" >&2
-      git "$kind" --abort 2>/dev/null || true
-    fi
+    return 0
   fi
+
+  # exit 0 (success)：让 user 按 Enter 后才退出，配合 Zed 的 hide:on_success
+  [ "${GIT_COMMAND_NO_PAUSE:-}" = "1" ] && return 0
+  [ ! -t 0 ] && return 0
+  # 标记主流程已完成；这之后任何 INT/TERM/HUP 引发的 re-entry 都不再回滚
+  _GIT_CMD_DONE=1
+  echo
+  read -r -p "$MSG_LIB_PRESS_ENTER" _ || true
 }
+
+# 自动 EXIT trap — 任何 source lib.sh 的脚本都获得"成功后按 Enter 关闭"行为
+# 反馈在终端外的脚本（copy / open-files）应在顶部 export GIT_COMMAND_NO_PAUSE=1
+trap '_lib_cleanup_on_exit' EXIT

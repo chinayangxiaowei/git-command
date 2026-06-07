@@ -6,6 +6,9 @@ set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPT="$DIR/branch-delete.sh"
 
+# Don't pause for "press Enter" at the end of each script invocation
+export GIT_COMMAND_NO_PAUSE=1
+
 pass=0
 fail=0
 

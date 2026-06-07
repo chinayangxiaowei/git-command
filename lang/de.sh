@@ -12,6 +12,7 @@ MSG_LIB_NOT_BARE_LAYOUT='Aktuelles Projekt liegt nicht im bare + worktrees Layou
 MSG_LIB_INIT_HINT='Zum Aktivieren ein neues Projekt anlegen mit: bash git-command/init-bare-tree.sh <name> [<url>]'
 MSG_LIB_MIGRATE_HINT='Für bestehende Projekte: migrate-to-bare-tree.sh (noch nicht implementiert; bitte manuell migrieren).'
 MSG_LIB_CLEANUP_FMT='Skript unerwartet beendet (Exit %d); führe automatisch git %s --abort aus, um zurückzurollen.\n'
+MSG_LIB_PRESS_ENTER="── Enter zum Schließen ──"
 
 # ── reword.sh ───────────────────────────────────────────────────
 MSG_REWORD_TITLE="reword (Nachricht dieses commits umschreiben)"

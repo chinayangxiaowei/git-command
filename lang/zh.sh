@@ -12,6 +12,7 @@ MSG_LIB_NOT_BARE_LAYOUT='当前不在 bare + worktrees 布局下，worktree 菜�
 MSG_LIB_INIT_HINT='如需启用，新项目用: bash git-command/init-bare-tree.sh <name> [<url>]'
 MSG_LIB_MIGRATE_HINT='已有项目用 migrate-to-bare-tree.sh（暂未实现，先手动迁移）。'
 MSG_LIB_CLEANUP_FMT='脚本异常退出 (exit %d)，自动 git %s --abort 回滚到操作前。\n'
+MSG_LIB_PRESS_ENTER="── 按 Enter 关闭 ──"
 
 # ── reword.sh ───────────────────────────────────────────────────
 MSG_REWORD_TITLE="reword（重写此 commit 的 message）"

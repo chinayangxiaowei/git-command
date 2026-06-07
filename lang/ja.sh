@@ -12,6 +12,7 @@ MSG_LIB_NOT_BARE_LAYOUT='現在のプロジェクトは bare + worktrees 構成�
 MSG_LIB_INIT_HINT='有効化するには新規プロジェクトで実行: bash git-command/init-bare-tree.sh <name> [<url>]'
 MSG_LIB_MIGRATE_HINT='既存プロジェクト向け: migrate-to-bare-tree.sh（未実装。手動で移行してください）。'
 MSG_LIB_CLEANUP_FMT='スクリプトが予期せず終了しました (exit %d)。自動で git %s --abort を実行して巻き戻します。\n'
+MSG_LIB_PRESS_ENTER="── Enter で閉じる ──"
 
 # ── reword.sh ───────────────────────────────────────────────────
 MSG_REWORD_TITLE="reword（この commit のメッセージを書き換える）"

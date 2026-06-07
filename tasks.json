@@ -3,368 +3,625 @@
     "label": "__LABEL_SEP_VIEW__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_VIEW_BRANCHES_CONTAINING__",
-    "command": "git",
-    "args": ["--no-pager", "branch", "-a", "--contains", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "command": "bash",
+    "args": [
+      "__GIT_COMMAND_DIR__/view-branches-containing.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_VIEW_TAGS_CONTAINING__",
-    "command": "git",
-    "args": ["--no-pager", "tag", "--contains", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "command": "bash",
+    "args": [
+      "__GIT_COMMAND_DIR__/view-tags-containing.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_VIEW_STAT__",
-    "command": "git",
-    "args": ["--no-pager", "show", "--stat", "--pretty=fuller", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "command": "bash",
+    "args": [
+      "__GIT_COMMAND_DIR__/view-stat.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_VIEW_DIFF__",
-    "command": "git",
-    "args": ["--no-pager", "show", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "command": "bash",
+    "args": [
+      "__GIT_COMMAND_DIR__/view-diff.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_VIEW_DIFF_HEAD__",
-    "command": "git",
-    "args": ["--no-pager", "diff", "$ZED_GIT_SHA..HEAD"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "command": "bash",
+    "args": [
+      "__GIT_COMMAND_DIR__/view-diff-head.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_VIEW_OPEN_FILES__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/open-files.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
+    "args": [
+      "__GIT_COMMAND_DIR__/open-files.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "no_focus",
     "hide": "on_success"
   },
   {
     "label": "__LABEL_VIEW_EXPORT_FILES__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/export-commit-files.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/export-commit-files.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_VIEW_EXPORT_PATCHES__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/export-patches.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/export-patches.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_MODIFY__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_MODIFY_REWORD__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/reword.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/reword.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_MODIFY_EDIT_COMMIT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/edit-commit.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/edit-commit.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_REWRITE__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_REWRITE_SQUASH__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/squash-n.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/squash-n.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_REWRITE_DROP__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/drop-commit.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/drop-commit.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_REWRITE_INTERACTIVE__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/rebase-i.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/rebase-i.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_REWRITE_RESET_SOFT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/reset-soft.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/reset-soft.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_REWRITE_RESET_HARD__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/reset-hard.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/reset-hard.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_FIXUP__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_FIXUP_INTO_THIS__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/fixup.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/fixup.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_FIXUP_INTO_ANCESTOR__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/commit-fixup-into.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/commit-fixup-into.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_COPY_UNDO__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_COPY_CHERRY_PICK__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/cherry-pick.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/cherry-pick.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_COPY_REVERT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/revert.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/revert.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_BRANCH__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_BRANCH_FROM__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/branch-from.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/branch-from.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_BRANCH_TRY__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/try-branch.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/try-branch.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_BRANCH_REBASE_ONTO__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/rebase-branch-onto.sh"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/rebase-branch-onto.sh"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_BRANCH_DELETE__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/branch-delete.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/branch-delete.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_BRANCH_CHECKOUT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/branch-checkout.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/branch-checkout.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_BRANCH_RENAME__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/branch-rename.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/branch-rename.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_COPY_BRANCH_NAME__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/copy-branch-name.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/copy-branch-name.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_COPY_COMMIT_MSG__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/copy-commit-message.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/copy-commit-message.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_TAG__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_TAG_CREATE__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/tag.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/tag.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_TAG_DELETE__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/tag-delete.sh", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/tag-delete.sh",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_STASH__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_STASH_PUSH__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/stash-push.sh"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/stash-push.sh"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_STASH_POP__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/stash-pop.sh"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/stash-pop.sh"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
-
   {
     "label": "__LABEL_SEP_WORKTREE__",
     "command": "true",
     "args": [],
-    "tags": ["git-command"],
+    "tags": [
+      "git-command"
+    ],
     "reveal": "never",
     "hide": "always"
   },
   {
     "label": "__LABEL_WT_REVIEW__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "review", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-from.sh",
+      "review",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_TRY__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "try", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-from.sh",
+      "try",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_FIX__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "fix", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-from.sh",
+      "fix",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_FEAT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "feat", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-from.sh",
+      "feat",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_HOT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-from.sh", "hot", "$ZED_GIT_SHA"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-from.sh",
+      "hot",
+      "$ZED_GIT_SHA"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_RM_REVIEW__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "review"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-remove.sh",
+      "review"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_RM_TRY__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "try"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-remove.sh",
+      "try"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_RM_FIX__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "fix"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-remove.sh",
+      "fix"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_RM_FEAT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "feat"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-remove.sh",
+      "feat"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   },
   {
     "label": "__LABEL_WT_RM_HOT__",
     "command": "bash",
-    "args": ["__GIT_COMMAND_DIR__/worktree-remove.sh", "hot"],
-    "tags": ["git-command"],
-    "reveal": "always"
+    "args": [
+      "__GIT_COMMAND_DIR__/worktree-remove.sh",
+      "hot"
+    ],
+    "tags": [
+      "git-command"
+    ],
+    "reveal": "always",
+    "hide": "on_success"
   }
 ]

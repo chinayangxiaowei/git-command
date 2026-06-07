@@ -12,6 +12,7 @@ MSG_LIB_NOT_BARE_LAYOUT='Текущий проект не в раскладке 
 MSG_LIB_INIT_HINT='Чтобы включить, создай новый проект командой: bash git-command/init-bare-tree.sh <name> [<url>]'
 MSG_LIB_MIGRATE_HINT='Для существующих проектов: migrate-to-bare-tree.sh (пока не реализован; мигрируй вручную).'
 MSG_LIB_CLEANUP_FMT='Скрипт завершился неожиданно (exit %d); автоматически выполняю git %s --abort для отката.\n'
+MSG_LIB_PRESS_ENTER="── нажмите Enter для закрытия ──"
 
 # ── reword.sh ───────────────────────────────────────────────────
 MSG_REWORD_TITLE="reword (переписать сообщение этого commit)"

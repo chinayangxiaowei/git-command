@@ -12,6 +12,7 @@ MSG_LIB_NOT_BARE_LAYOUT='Current project is not in bare + worktrees layout; work
 MSG_LIB_INIT_HINT='To enable, create a new project with: bash git-command/init-bare-tree.sh <name> [<url>]'
 MSG_LIB_MIGRATE_HINT='For existing projects: migrate-to-bare-tree.sh (not implemented yet; migrate manually).'
 MSG_LIB_CLEANUP_FMT='Script exited unexpectedly (exit %d); auto-running git %s --abort to roll back.\n'
+MSG_LIB_PRESS_ENTER="── press Enter to close ──"
 
 # ── reword.sh ───────────────────────────────────────────────────
 MSG_REWORD_TITLE="reword (rewrite this commit's message)"

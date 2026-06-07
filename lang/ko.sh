@@ -12,6 +12,7 @@ MSG_LIB_NOT_BARE_LAYOUT='현재 프로젝트가 bare + worktree 레이아웃이 
 MSG_LIB_INIT_HINT='활성화하려면 새 프로젝트를 생성하세요: bash git-command/init-bare-tree.sh <name> [<url>]'
 MSG_LIB_MIGRATE_HINT='기존 프로젝트의 경우: migrate-to-bare-tree.sh (아직 미구현; 수동으로 마이그레이션).'
 MSG_LIB_CLEANUP_FMT='스크립트가 예기치 않게 종료됨 (exit %d); 롤백을 위해 git %s --abort를 자동 실행합니다.\n'
+MSG_LIB_PRESS_ENTER="── Enter 키로 닫기 ──"
 
 # ── reword.sh ───────────────────────────────────────────────────
 MSG_REWORD_TITLE="reword (이 commit의 메시지를 다시 작성)"

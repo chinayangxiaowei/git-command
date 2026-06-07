@@ -3,6 +3,7 @@ set -euo pipefail
 SHA="${1:?missing SHA}"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/lib.sh"
+export GIT_COMMAND_NO_PAUSE=1   # feedback is outside the terminal (clipboard/editor)
 
 show_intro "$MSG_COPY_BRANCH_TITLE" \
   "$MSG_COPY_BRANCH_PURPOSE" \
