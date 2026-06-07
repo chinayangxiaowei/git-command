@@ -3,6 +3,17 @@
 为 [Zed](https://zed.dev) 编辑器的 Git Graph 右键菜单提供 JetBrains 风格的 Git 操作脚本，
 覆盖日常 80% 的 commit 级操作（reword / squash / fixup / cherry-pick / revert / branch / tag / stash …）。
 
+## Requirements
+
+| | |
+|--|--|
+| OS | macOS / Linux |
+| Shell | bash ≥ 3.2（macOS 系统自带的 `/bin/bash` 即可） |
+| Git | ≥ 2.x |
+| 编辑器 | [Zed](https://zed.dev) — 用来出菜单；纯命令行也能直接调脚本 |
+
+**Windows 不支持。** 脚本依赖 POSIX shell 和 Unix 工具链。WSL 下理论可行（bash + git 都有），但 Zed 在 WSL 中的 Git Graph 集成不背书。
+
 ## 安装
 
 ```bash
