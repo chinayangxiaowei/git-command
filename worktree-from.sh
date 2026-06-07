@@ -43,12 +43,37 @@ main() {
     exit 1
   fi
 
-  show_intro "worktree-from（$purpose）" \
+  show_intro "worktree-from [$purpose]" \
     "作用: 从此 commit 在新 worktree 检出（按 purpose 分组）" \
     "purpose: $purpose"
   print_header "$SHA"
 
-  # 后续 Task 实现各 purpose 子流程
+  local short_sha
+  short_sha=$(git rev-parse --short "$SHA")
+
+  local container rel_path abs_path
+  container=$(cd "$(git rev-parse --git-common-dir)/.." && pwd)
+
+  if [ "$purpose" = "review" ]; then
+    rel_path="review/$short_sha"
+    abs_path="$container/$rel_path"
+
+    if [ -e "$abs_path" ]; then
+      echo "路径已存在: $abs_path" >&2
+      echo "提示: git worktree list  查看现有" >&2
+      exit 1
+    fi
+
+    git worktree add --detach "$abs_path" "$SHA"
+
+    echo
+    echo "✓ worktree created: $abs_path"
+    echo "  清理: git worktree remove \"$abs_path\""
+    command -v zed >/dev/null && zed "$abs_path" || true
+    exit 0
+  fi
+
+  # 后续 Task 实现 try/fix/feat/hot
   echo "TODO: implement $purpose flow" >&2
   exit 1
 }

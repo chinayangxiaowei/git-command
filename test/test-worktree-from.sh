@@ -73,6 +73,8 @@ teardown_sandbox() {
 
 SB=$(setup_sandbox)
 echo "  sandbox: $SB"
+# setup_sandbox's `cd` was in a subshell; caller must cd into sandbox too.
+cd "$SB/main"
 SHA1=$(git rev-parse HEAD~2)  # fix: auth bug...
 SHA2=$(git rev-parse HEAD~1)  # 修复登录 bug
 SHA3=$(git rev-parse HEAD)    # feat(payment): add stripe
@@ -96,6 +98,26 @@ if [ "$ec" -ne 0 ]; then
   pass=$((pass+1)); echo "  ✓ bad SHA 退出非 0"
 else
   fail=$((fail+1)); echo "  ✗ bad SHA 应退出非 0"
+fi
+
+# review: 在 review/<short_sha>/ detached 检出
+short1=$(git rev-parse --short "$SHA1")
+$SCRIPT_BIN review "$SHA1" >/dev/null 2>&1 && ec=0 || ec=$?
+if [ "$ec" -eq 0 ] && [ -d "$SB/review/$short1" ]; then
+  pass=$((pass+1)); echo "  ✓ review 路径创建成功: review/$short1/"
+else
+  exists=$([ -d "$SB/review/$short1" ] && echo yes || echo no)
+  fail=$((fail+1)); echo "  ✗ review 路径未创建 ec=$ec exists=$exists"
+fi
+
+# review HEAD 是 detached
+if [ -d "$SB/review/$short1" ]; then
+  head=$(git -C "$SB/review/$short1" rev-parse --abbrev-ref HEAD)
+  if [ "$head" = "HEAD" ]; then
+    pass=$((pass+1)); echo "  ✓ review HEAD detached"
+  else
+    fail=$((fail+1)); echo "  ✗ review HEAD 不是 detached: $head"
+  fi
 fi
 
 teardown_sandbox "$SB"
