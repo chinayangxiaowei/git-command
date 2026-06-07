@@ -1,91 +1,101 @@
+**English | [简体中文](README.zh-CN.md)**
+
 # git-command
 
-为 [Zed](https://zed.dev) 编辑器的 Git Graph 右键菜单提供 JetBrains 风格的 Git 操作脚本，
-覆盖日常 80% 的 commit 级操作（reword / squash / fixup / cherry-pick / revert / branch / tag / stash …）。
+JetBrains-style Git operation scripts for [Zed](https://zed.dev)'s Git Graph right-click context menu — covers ~80% of daily commit-level operations (reword / squash / fixup / cherry-pick / revert / branch / tag / stash …).
 
 ## Requirements
 
 | | |
 |--|--|
 | OS | macOS / Linux |
-| Shell | bash ≥ 3.2（macOS 系统自带的 `/bin/bash` 即可） |
+| Shell | bash ≥ 3.2 (macOS's stock `/bin/bash` is fine) |
 | Git | ≥ 2.x |
-| 编辑器 | [Zed](https://zed.dev) — 用来出菜单；纯命令行也能直接调脚本 |
+| Editor | [Zed](https://zed.dev) — for the menu; scripts also work standalone from the CLI |
 
-**Windows 不支持。** 脚本依赖 POSIX shell 和 Unix 工具链。WSL 下理论可行（bash + git 都有），但 Zed 在 WSL 中的 Git Graph 集成不背书。
+**Windows is not supported.** Scripts rely on POSIX shell + Unix toolchain. WSL is theoretically possible (bash + git both exist there) but Zed's Git Graph integration under WSL is not endorsed.
 
-## 安装
+## Install
 
 ```bash
-git clone <this-repo> ~/git-command   # 路径任意
-cd ~/git-command/main
+git clone https://github.com/chinayangxiaowei/git-command.git ~/git-command   # any path
+cd ~/git-command
 ./sync-tasks.sh
 ```
 
-`sync-tasks.sh` 做两件事：
+`sync-tasks.sh` does two things:
 
-1. 把所有 `*.sh` 拷到 `~/.config/zed/git-command/`
-2. 用上面那个目录渲染 `tasks.json` 里的 `__GIT_COMMAND_DIR__` 占位符，
-   结果写到 `~/.config/zed/tasks.json`
+1. Copies every `*.sh` to `~/.config/zed/git-command/`
+2. Renders the `__GIT_COMMAND_DIR__` placeholder in `tasks.json` with the path above,
+   writing the result to `~/.config/zed/tasks.json`
 
-之后在 Zed 里 `Cmd+Shift+P` → `reload window`，所有项目的 Git Graph 右键菜单都会出现这 26 条命令。
+Then in Zed run `Cmd+Shift+P` → `reload window`. The 37 commands now appear in the Git Graph right-click menu of every project.
 
-需要换装位置？覆盖环境变量：
+Want a different install location? Override via env var:
 
 ```bash
 TARGET_DIR=~/.local/share/git-command ./sync-tasks.sh
 ```
 
-## 菜单内容
+## Menu Inventory
 
-37 个命令分 9 类，由 `tasks.json` 注入到 Zed Git Graph 的 commit 右键菜单。
+37 commands across 9 categories, injected into Zed's Git Graph commit right-click menu via `tasks.json`.
 
-| 类别 | 命令 |
-|------|------|
-| 查看 / 浏览 | 列含此 commit 的分支 / tag、stat、完整 diff、与 HEAD 对比、在编辑器中打开此 commit 涉及的所有文件、导出文件历史版本、导出向前 N 条 patch |
-| 修改此 commit | reword（只改 message）、edit-commit（改 message + 增删文件） |
-| 历史重写 | squash 向前 N 条、drop 此 commit、interactive rebase、soft / hard reset |
-| Fixup | 工作区改动并入此 commit（fixup + autosquash）、把此 commit 折叠进祖先 |
-| 复制 / 撤销 | cherry-pick、revert |
-| 分支 | 从此 commit 创建分支、临时试错分支、把分支 A rebase 到分支 B（CLion 风格）、删除指向此 commit 的本地分支（可选远端） |
-| Tag | 创建 tag、删除 tag（含远端） |
-| Stash | 带名字 stash push、pop 最近 stash |
-| Worktree | 从此 commit 在新 worktree 检出（review / try / fix / feat / hot 五种用途，自动命名 + 在新 Zed 窗口打开）；每种用途配套"删除"菜单项，列出该类型现有 worktree，复制粘贴名字确认 |
+| Category | Commands |
+|----------|----------|
+| View / Browse | branches / tags containing this commit; stat; full diff; diff vs HEAD; open every file touched by this commit in the editor; export file snapshots at this commit; export N previous patches |
+| Modify this commit | `reword` (message only); `edit-commit` (message + add/remove files) |
+| Rewrite history | squash N commits forward; drop this commit; interactive rebase; soft / hard reset |
+| Fixup | merge working-tree changes into this commit (`--fixup` + autosquash); fold this commit into an ancestor |
+| Copy / Undo | cherry-pick; revert |
+| Branch | create branch from this commit; ad-hoc try branch; rebase branch A onto branch B (CLion-style); delete local branches at this commit (with optional remote) |
+| Tag | create tag; delete tag (with optional remote) |
+| Stash | named stash push; pop most recent stash |
+| Worktree | create a new worktree from this commit (five purposes: `review` / `try` / `fix` / `feat` / `hot`, auto-named + opened in a new Zed window); each purpose has a matching "delete" menu item that lists existing worktrees and asks for paste-to-confirm |
 
-## 安全设计
+## Safety Design
 
-所有改写历史的脚本走两层保护：
+Every history-rewriting script runs under two layers of protection:
 
-- **`ensure_clean_state`** — 启动前如果检测到 rebase / cherry-pick / revert / merge 进行中，直接拒绝运行
-- **`enable_failure_rollback`** — 注册 EXIT / INT / TERM / HUP trap，任何非零退出 + 检测到残留 rebase 状态都会自动 `--abort` 清理
+- **`ensure_clean_state`** — refuses to start if a rebase / cherry-pick / revert / merge is already in progress
+- **`enable_failure_rollback`** — registers `EXIT` / `INT` / `TERM` / `HUP` traps; any non-zero exit while a rebase-like state is detected auto-triggers `--abort` cleanup
 
-只有 `SIGKILL` / 断电这种不可拦截信号无法回滚（POSIX 限制）。
+Only `SIGKILL` / power loss can bypass this (POSIX limitation).
 
-每个脚本顶部都会用 `show_intro` 打印"做什么 / 何时用 / 注意点"，二次确认后才开干。
+Each script's entry point uses `show_intro` to print "what it does / when to use it / caveats", then prompts for a `y/N` confirm before touching anything.
 
-## 项目布局
+## Project Layout
 
-仓库本身用 bare + worktree 布局，由 `init-bare-tree.sh` 创建。这是个独立的便利脚本，
-让任何新项目都可以一行命令初始化成这种布局：
+The repo itself uses a **bare + worktree** layout, set up by `init-bare-tree.sh` — a standalone helper that initializes any new project into this shape with one command:
 
 ```
 project/
-├── .bare/      ← git 数据
-├── .git        ← 指向 .bare 的文件
-└── main/       ← 主 worktree
+├── .bare/      ← git data
+├── .git        ← file pointing to .bare
+└── main/       ← primary worktree
 ```
 
-好处：feature 分支可以并行检出到 `feature-x/` 等多个 worktree，互不干扰。
+Benefits: feature branches can be checked out into sibling worktrees (`feature-x/`, etc.) in parallel without disturbing each other. The worktree menu category lives on top of this layout (`require_bare_layout` gates it).
 
-## 开发者注意
+## Notes for Contributors
 
-- 目标 shell 是 macOS 自带的 **bash 3.2.57**。不要用 `mapfile` / `${var^}` / `${var,}` / 关联数组等 bash 4+ 特性。
-- 任何新脚本都应该 `source lib.sh` 复用 7 个工具函数（`show_intro` / `print_header` / `confirm` / `ensure_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout`）。
-- 动历史的脚本必须组合 `ensure_clean_state` + `enable_failure_rollback`。
+- Target shell is macOS's stock **bash 3.2.57**. Avoid bash 4+ features (`mapfile`, `${var^}` / `${var,}`, associative arrays).
+- New scripts should `source lib.sh` and reuse its seven helpers (`show_intro` / `print_header` / `confirm` / `ensure_clean_state` / `enable_failure_rollback` / `run_or_abort` / `require_bare_layout`).
+- History-rewriting scripts must compose `ensure_clean_state` + `enable_failure_rollback`.
 
-## 已知限制（上游 Zed 待修）
+## Tests
 
-| Issue | 现象 | 状态 |
-|-------|------|------|
-| [zed-industries/zed#53594](https://github.com/zed-industries/zed/issues/53594) | 外部 git 命令改 tag 后 Git Graph 不刷新，需要 Reload Window | OPEN, P2 |
-| [zed-industries/zed#58777](https://github.com/zed-industries/zed/issues/58777) | `tasks.json` 缺 `detail` 字段和原生 `separator` 类型，菜单标签无法对齐右列 | OPEN |
+```bash
+bash test/test-worktree-from.sh    # 19 assertions
+bash test/test-branch-delete.sh    # 6 assertions
+bash test/test-worktree-remove.sh  # 6 assertions
+```
+
+No external test framework — pure bash + git in `mktemp` sandboxes.
+
+## Known Limitations (upstream Zed)
+
+| Issue | Symptom | Status |
+|-------|---------|--------|
+| [zed-industries/zed#53594](https://github.com/zed-industries/zed/issues/53594) | Git Graph doesn't refresh after external git commands touch tags; requires Reload Window | OPEN, P2 |
+| [zed-industries/zed#58777](https://github.com/zed-industries/zed/issues/58777) | `tasks.json` lacks a `detail` field and native `separator` type — menu labels can't right-align | OPEN |
