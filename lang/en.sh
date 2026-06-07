@@ -186,3 +186,121 @@ MSG_BRANCH_DELETE_NO_REMOTE="(no remote configured; skipping remote)"
 MSG_BRANCH_DELETE_REMOTE_ABSENT_FMT="(branch not present on remote [%s]; skipping)"
 MSG_BRANCH_DELETE_REMOTE_PROMPT_FMT="Also delete from remote [%s]? [y/N] "
 MSG_BRANCH_DELETE_REMOTE_DONE="Remote branch deleted."
+
+# ── edit-commit.sh ──────────────────────────────────────────────
+MSG_EDIT_COMMIT_TITLE="edit-commit (edit this commit's metadata / file list)"
+MSG_EDIT_COMMIT_HEAD_PATH="HEAD path:  working tree may be dirty; direct amend; change message / add / remove / modify files"
+MSG_EDIT_COMMIT_OLD_PATH="Old commit: working tree must be clean; supports message / add (untracked) / remove files"
+MSG_EDIT_COMMIT_NOT_SUITED="Not suited (old commit): modifying existing files' contents → use the fixup menu (see header comment for why)"
+MSG_EDIT_COMMIT_FILE_OPS_HEADER="One operation per line, finish with 'Q' on its own line:"
+MSG_EDIT_COMMIT_FILE_OPS_ADD="  +:path/to/file    git add (add / update / stage any change)"
+MSG_EDIT_COMMIT_FILE_OPS_REMOVE="  -:path/to/file    remove from this commit (disk preserved, git rm --cached)"
+MSG_EDIT_COMMIT_FILE_OPS_DONE="  Q                 done"
+MSG_EDIT_COMMIT_FILE_FMT_ERR_FMT='  skip format error: %s\n'
+MSG_EDIT_COMMIT_FILE_NOT_EXIST_FMT='  skip +%s  (file does not exist)\n'
+MSG_EDIT_COMMIT_FILE_ADD_OK_FMT='  add  %s\n'
+MSG_EDIT_COMMIT_FILE_ADD_FAIL_FMT='  skip +%s  (git add failed)\n'
+MSG_EDIT_COMMIT_FILE_RM_OK_FMT='  rm   %s  (removed from commit, kept on disk)\n'
+MSG_EDIT_COMMIT_FILE_RM_FAIL_FMT='  skip -%s  (not in this commit)\n'
+MSG_EDIT_COMMIT_ASK_MSG="New message (per line; single 'Q' to submit; just Q = keep unchanged):"
+MSG_EDIT_COMMIT_HEAD_HEADER="─── HEAD fast path ───"
+MSG_EDIT_COMMIT_HEAD_NOTE_TARGET="Target is HEAD, no rebase needed:"
+MSG_EDIT_COMMIT_HEAD_NOTE_DIRTY="  · working tree may be dirty (changes become amend candidates)"
+MSG_EDIT_COMMIT_HEAD_NOTE_CHANGES="  · add / modify / remove files freely; no downstream conflict risk"
+MSG_EDIT_COMMIT_HEAD_CUR_MSG="─── current message ───"
+MSG_EDIT_COMMIT_HEAD_CUR_CHANGES="─── current working/staged changes ───"
+MSG_EDIT_COMMIT_HEAD_ASK_MSG="Change the message? [y/N] "
+MSG_EDIT_COMMIT_HEAD_ASK_FILES="Change files (add/remove/modify)? [y/N] "
+MSG_EDIT_COMMIT_NO_CHANGES="(no changes; not amending; exit.)"
+MSG_EDIT_COMMIT_UNSTAGED_HINT="Note: working tree still has unstaged changes; amend will NOT include them."
+MSG_EDIT_COMMIT_AMEND_MSG_FILES="Amended (new message + file changes)"
+MSG_EDIT_COMMIT_AMEND_MSG="Amended (new message)"
+MSG_EDIT_COMMIT_AMEND_FILES="Amended (file changes)"
+MSG_EDIT_COMMIT_OLD_DIRTY_TREE_BLOCK='Working tree has uncommitted changes.
+
+If you want to merge those changes into this commit → use the menu:
+  "Fold working/staged changes into this commit (fixup+autosquash)"
+
+If you really want this menu (change message / add new files / remove files), commit or stash first.'
+MSG_EDIT_COMMIT_OLD_NOT_ANCESTOR_FMT='%s is not in the current branch ancestor chain.\n'
+MSG_EDIT_COMMIT_OLD_HEADER="─── Old-commit path (rebase) ───"
+MSG_EDIT_COMMIT_OLD_NOTE_APPLIES="Applies to: message / add new files (untracked) / remove files"
+MSG_EDIT_COMMIT_OLD_NOTE_NOT_APPLIES="Does NOT apply to: modifying existing file contents (use the fixup menu)"
+MSG_EDIT_COMMIT_OLD_CONTINUE="Continue?"
+MSG_EDIT_COMMIT_OLD_REBASE_NOT_EDIT="rebase did not enter edit state."
+MSG_EDIT_COMMIT_OLD_CUR_MSG="─── current commit message ───"
+MSG_EDIT_COMMIT_OLD_ASK_MSG="Change message? [y/N] "
+MSG_EDIT_COMMIT_OLD_ASK_FILES="Change files (add/remove)? [y/N] "
+MSG_EDIT_COMMIT_OLD_NO_CHANGES="(no changes; wrapping up)"
+MSG_EDIT_COMMIT_OLD_CONTINUE_FAIL="rebase --continue failed (likely a downstream modify/delete conflict against a file you just removed)."
+MSG_EDIT_COMMIT_OLD_REBASE_DONE="rebase complete"
+
+# ── squash-n.sh ─────────────────────────────────────────────────
+MSG_SQUASH_TITLE="squash-n (squash N commits forward from this commit)"
+MSG_SQUASH_PURPOSE="What:  squash this commit and N-1 ancestors into one; downstream commits replay on top"
+MSG_SQUASH_WHEN="When:  tidy WIP commits / compress noise / merge several related small commits"
+MSG_SQUASH_PREREQ="Needs: working tree must be clean; downstream SHAs change; auto-aborts on conflict"
+MSG_SQUASH_DIRTY_TREE="Working tree has uncommitted changes; commit or stash first."
+MSG_SQUASH_COUNT_PROMPT="How many to squash (including this commit, default 2): "
+MSG_SQUASH_MIN_TWO="Need at least 2 commits to make squash meaningful."
+MSG_SQUASH_TOO_MANY_FMT='This commit has only %d ancestor(s) including itself; at most %d.\n'
+MSG_SQUASH_PREVIEW_FMT='Will squash these %d commit(s) (old → new):\n'
+MSG_SQUASH_MSG_PROMPT="New commit message (per line; single Q to submit; bare Q = open editor with default concatenation; :q to cancel):"
+MSG_SQUASH_CANCELLED="Cancelled."
+MSG_SQUASH_CONTINUE="Continue?"
+
+# ── drop-commit.sh ──────────────────────────────────────────────
+MSG_DROP_TITLE="drop-commit (delete this commit from history)"
+MSG_DROP_PURPOSE="What:  remove this commit from the branch history; downstream commits replay (new SHAs)"
+MSG_DROP_WHEN="When:  accidental commit (passwords / debug code) / useless WIP / duplicate / experiment to wipe"
+MSG_DROP_CONTRAST="Note:  revert adds an inverse commit (keeps history); drop truly removes (rewrites history)"
+MSG_DROP_DIRTY_TREE="Working tree has uncommitted changes; commit or stash first."
+MSG_DROP_NOT_ANCESTOR_FMT='%s is not in the current branch ancestor chain.\n'
+MSG_DROP_ROOT_COMMIT_FMT='%s is the root commit, has no parent; rebase cannot remove it.\n'
+MSG_DROP_ROOT_HINT="Truly removing the root commit requires git update-ref etc.; handle manually."
+MSG_DROP_WILL_REMOVE="Will remove:"
+MSG_DROP_DOWNSTREAM_FMT='%d downstream commit(s) will replay (SHAs change):\n'
+MSG_DROP_DOWNSTREAM_HINT="  (if downstream changes depend on this commit → auto-abort on conflict)"
+MSG_DROP_IS_HEAD_NOTE="(this commit is HEAD → fast path via git reset --hard HEAD~; no rebase)"
+MSG_DROP_CONFIRM="Confirm removal?"
+MSG_DROP_DONE_HEAD="Done. HEAD moved to the previous commit."
+MSG_DROP_DONE_REBASE="Done. The commit has been removed from history."
+
+# ── fixup.sh ────────────────────────────────────────────────────
+MSG_FIXUP_TITLE="fixup (fold working-tree changes into this commit)"
+MSG_FIXUP_PURPOSE="What:  create a fixup commit + autosquash, merging working-tree changes into this commit"
+MSG_FIXUP_WHEN="When:  you've edited files and want them to land on an old commit (very common); avoid polluting history"
+MSG_FIXUP_PREREQ="Needs: working / staging tree must have changes; auto-aborts on conflict"
+MSG_FIXUP_NOT_ANCESTOR_FMT='%s is not in the current branch ancestor chain.\n'
+MSG_FIXUP_NO_CHANGES="Working tree is clean; nothing to fold."
+MSG_FIXUP_WORKFLOW_HINT="Workflow: edit files → use this menu → pick the target commit → auto fixup + autosquash."
+MSG_FIXUP_WILL_FOLD="Changes to fold into this commit:"
+MSG_FIXUP_ASK_INCLUDE_UNSTAGED="Index already has content; also include unstaged changes? [y/N] "
+MSG_FIXUP_ASK_ADD_ALL="Index is empty; git add -A everything then fixup? [Y/n] "
+MSG_FIXUP_EMPTY_INDEX="Index is empty; nothing to fixup; cancelled."
+MSG_FIXUP_TARGET_FMT='Target: %s  "%s"\n'
+MSG_FIXUP_CONFIRM="Confirm fixup + autosquash? [Y/n] "
+MSG_FIXUP_CANCELLED="Cancelled; index state preserved."
+MSG_FIXUP_CREATED="  + fixup commit created"
+MSG_FIXUP_DONE_FMT='Done. Changes merged into %s (SHA updated after autosquash).\n'
+
+# ── commit-fixup-into.sh ────────────────────────────────────────
+MSG_CFIX_TITLE="commit→fixup (fold this commit into an ancestor)"
+MSG_CFIX_PURPOSE="What:  take this commit and apply it as a fixup onto an earlier commit on the same branch"
+MSG_CFIX_WHEN="When:  a fix on HEAD really belongs to an earlier commit; move it home"
+MSG_CFIX_CONTRAST="Note:  fixup.sh uses working-tree changes; this menu uses an existing commit"
+MSG_CFIX_DIRTY_TREE="Working tree has uncommitted changes; commit or stash first."
+MSG_CFIX_NOT_ANCESTOR_SRC="Source commit is not in the current branch ancestor chain."
+MSG_CFIX_HEADER="Fold this commit (fixup) into another commit."
+MSG_CFIX_TARGET_HINT="Target must be an ancestor of the source (earlier in history). Hint: copy the target SHA from the Zed Graph."
+MSG_CFIX_TARGET_PROMPT="Target commit SHA (short or long): "
+MSG_CFIX_NO_INPUT="No input; cancelled."
+MSG_CFIX_INVALID_SHA_FMT='Invalid SHA: %s\n'
+MSG_CFIX_SAME_COMMIT="Target and source are the same; meaningless."
+MSG_CFIX_NOT_ANCESTOR_TGT_FMT='%s is not an ancestor of the source commit (cannot fixup onto it).\n'
+MSG_CFIX_PREVIEW="─── preview ───"
+MSG_CFIX_SOURCE_LABEL="Source:"
+MSG_CFIX_TARGET_LABEL="Target:"
+MSG_CFIX_RANGE_LABEL="rebase range (old → new):"
+MSG_CFIX_CONTINUE="Continue?"
+MSG_CFIX_DONE="Done. Source folded into target (target commit's SHA updated)."

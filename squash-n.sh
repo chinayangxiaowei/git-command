@@ -4,47 +4,47 @@ SHA="${1:?missing SHA}"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/lib.sh"
 
-show_intro "squash-n（从此 commit 向前 N 条合并）" \
-  "作用: 把此 commit 和向前 N-1 条合并成 1 条，下游 commit 在新顶上 replay" \
-  "场景: 整理 WIP commits / 压缩噪音 / 合并主题相关的多个小 commit" \
-  "前提: 工作区必须干净；下游 SHA 全变；冲突时自动 abort"
+show_intro "$MSG_SQUASH_TITLE" \
+  "$MSG_SQUASH_PURPOSE" \
+  "$MSG_SQUASH_WHEN" \
+  "$MSG_SQUASH_PREREQ"
 
 print_header "$SHA"
 ensure_clean_state
 enable_failure_rollback
 
 if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "工作区有未提交改动，请先提交或 stash。" >&2
+  echo "$MSG_SQUASH_DIRTY_TREE" >&2
   exit 1
 fi
 
-read -erp "合并几条（含此提交，向前 N 条，默认 2）：" n
+read -erp "$MSG_SQUASH_COUNT_PROMPT" n
 n="${n:-2}"
 if ! [[ "$n" =~ ^[0-9]+$ ]] || (( n < 2 )); then
-  echo "至少 2 条才有合并意义。" >&2
+  echo "$MSG_SQUASH_MIN_TWO" >&2
   exit 1
 fi
 
 total="$(git rev-list --count "$SHA")"
 if (( n > total )); then
-  echo "此提交只有 $total 个祖先（含自身），最多合并 $total 条。" >&2
+  printf "$MSG_SQUASH_TOO_MANY_FMT" "$total" "$total" >&2
   exit 1
 fi
 
 echo
-echo "将合并以下 $n 条提交（旧 → 新）："
+printf "$MSG_SQUASH_PREVIEW_FMT" "$n"
 git --no-pager log --oneline --reverse "${SHA}~${n}..${SHA}"
 echo
 
-echo "新 commit message（逐行输入；单独一行 Q 提交；直接 Q = 走编辑器拼接默认；:q 取消）："
+echo "$MSG_SQUASH_MSG_PROMPT"
 new_msg=""
 while IFS= read -er line; do
   [[ "$line" == "Q" ]] && break
-  [[ "$line" == ":q" ]] && { echo "已取消。"; exit 130; }
+  [[ "$line" == ":q" ]] && { echo "$MSG_SQUASH_CANCELLED"; exit 130; }
   new_msg+="${line}"$'\n'
 done
 
-confirm "继续？"
+confirm "$MSG_SQUASH_CONTINUE"
 
 tmpdir="$(mktemp -d)"
 

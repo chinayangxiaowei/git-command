@@ -186,3 +186,121 @@ MSG_BRANCH_DELETE_NO_REMOTE="(没有 remote，跳过远端)"
 MSG_BRANCH_DELETE_REMOTE_ABSENT_FMT="(远端 [%s] 上没有此分支，跳过)"
 MSG_BRANCH_DELETE_REMOTE_PROMPT_FMT="也从远端 [%s] 删除？[y/N] "
 MSG_BRANCH_DELETE_REMOTE_DONE="远端分支已删除。"
+
+# ── edit-commit.sh ──────────────────────────────────────────────
+MSG_EDIT_COMMIT_TITLE="edit-commit（编辑此 commit 的元数据/文件清单）"
+MSG_EDIT_COMMIT_HEAD_PATH="HEAD 路径: 工作区可脏；直接 amend；可改 message / 加文件 / 删文件 / 改内容"
+MSG_EDIT_COMMIT_OLD_PATH="老 commit 路径: 工作区必须干净；适用 message / 新增（untracked）/ 删文件"
+MSG_EDIT_COMMIT_NOT_SUITED="不适用（老 commit）: 修改已有文件内容 → 用 fixup 菜单（详细原因见脚本顶部）"
+MSG_EDIT_COMMIT_FILE_OPS_HEADER="每行一个操作，输完 Q 单独成行："
+MSG_EDIT_COMMIT_FILE_OPS_ADD="  +:path/to/file    git add（加入 / 更新 / 暂存任何变化）"
+MSG_EDIT_COMMIT_FILE_OPS_REMOVE="  -:path/to/file    从此 commit 移除（disk 保留，git rm --cached）"
+MSG_EDIT_COMMIT_FILE_OPS_DONE="  Q                 完成"
+MSG_EDIT_COMMIT_FILE_FMT_ERR_FMT='  skip 格式错误：%s\n'
+MSG_EDIT_COMMIT_FILE_NOT_EXIST_FMT='  skip +%s  (文件不存在)\n'
+MSG_EDIT_COMMIT_FILE_ADD_OK_FMT='  add  %s\n'
+MSG_EDIT_COMMIT_FILE_ADD_FAIL_FMT='  skip +%s  (git add 失败)\n'
+MSG_EDIT_COMMIT_FILE_RM_OK_FMT='  rm   %s  (从 commit 移除，disk 保留)\n'
+MSG_EDIT_COMMIT_FILE_RM_FAIL_FMT='  skip -%s  (不在此 commit 里)\n'
+MSG_EDIT_COMMIT_ASK_MSG="新 message（逐行；单独一行 Q 提交；直接 Q = 不改）："
+MSG_EDIT_COMMIT_HEAD_HEADER="─── HEAD 快路径 ───"
+MSG_EDIT_COMMIT_HEAD_NOTE_TARGET="目标是 HEAD，无需 rebase："
+MSG_EDIT_COMMIT_HEAD_NOTE_DIRTY="  · 工作区可以脏（改动会作为 amend 候选）"
+MSG_EDIT_COMMIT_HEAD_NOTE_CHANGES="  · 修改 / 新增 / 删除文件随意，没有下游冲突风险"
+MSG_EDIT_COMMIT_HEAD_CUR_MSG="─── 当前 message ───"
+MSG_EDIT_COMMIT_HEAD_CUR_CHANGES="─── 当前工作区/暂存区改动 ───"
+MSG_EDIT_COMMIT_HEAD_ASK_MSG="改 message？[y/N] "
+MSG_EDIT_COMMIT_HEAD_ASK_FILES="改文件（增/删/改）？[y/N] "
+MSG_EDIT_COMMIT_NO_CHANGES="（无改动，不 amend，退出。）"
+MSG_EDIT_COMMIT_UNSTAGED_HINT="提示：工作区还有未 git add 的改动，amend 不会包含它们。"
+MSG_EDIT_COMMIT_AMEND_MSG_FILES="已 amend (新 message + 文件改动)"
+MSG_EDIT_COMMIT_AMEND_MSG="已 amend (新 message)"
+MSG_EDIT_COMMIT_AMEND_FILES="已 amend (文件改动)"
+MSG_EDIT_COMMIT_OLD_DIRTY_TREE_BLOCK='工作区有未提交改动。
+
+如果你想把这些改动并入此 commit → 请改用菜单：
+  「把工作区/暂存区改动并入此提交 (fixup+autosquash)」
+
+如果你确实想用本菜单（改 message / 加新文件 / 删文件），请先 commit 或 stash。'
+MSG_EDIT_COMMIT_OLD_NOT_ANCESTOR_FMT='%s 不在当前分支祖先链上。\n'
+MSG_EDIT_COMMIT_OLD_HEADER="─── 老 commit 路径 (rebase) ───"
+MSG_EDIT_COMMIT_OLD_NOTE_APPLIES="适用：改 message / 加新文件（untracked）/ 删文件"
+MSG_EDIT_COMMIT_OLD_NOTE_NOT_APPLIES="不适用：修改已有文件内容（请用 fixup 菜单）"
+MSG_EDIT_COMMIT_OLD_CONTINUE="继续？"
+MSG_EDIT_COMMIT_OLD_REBASE_NOT_EDIT="rebase 没进入 edit 状态。"
+MSG_EDIT_COMMIT_OLD_CUR_MSG="─── 当前 commit message ───"
+MSG_EDIT_COMMIT_OLD_ASK_MSG="改 message？[y/N] "
+MSG_EDIT_COMMIT_OLD_ASK_FILES="改文件（增/删）？[y/N] "
+MSG_EDIT_COMMIT_OLD_NO_CHANGES="(无改动，直接收尾)"
+MSG_EDIT_COMMIT_OLD_CONTINUE_FAIL="rebase --continue 失败（多半是下游 commit 改了你刚删的文件 → modify/delete 冲突）。"
+MSG_EDIT_COMMIT_OLD_REBASE_DONE="rebase 完成"
+
+# ── squash-n.sh ─────────────────────────────────────────────────
+MSG_SQUASH_TITLE="squash-n（从此 commit 向前 N 条合并）"
+MSG_SQUASH_PURPOSE="作用: 把此 commit 和向前 N-1 条合并成 1 条，下游 commit 在新顶上 replay"
+MSG_SQUASH_WHEN="场景: 整理 WIP commits / 压缩噪音 / 合并主题相关的多个小 commit"
+MSG_SQUASH_PREREQ="前提: 工作区必须干净；下游 SHA 全变；冲突时自动 abort"
+MSG_SQUASH_DIRTY_TREE="工作区有未提交改动，请先提交或 stash。"
+MSG_SQUASH_COUNT_PROMPT="合并几条（含此提交，向前 N 条，默认 2）："
+MSG_SQUASH_MIN_TWO="至少 2 条才有合并意义。"
+MSG_SQUASH_TOO_MANY_FMT='此提交只有 %d 个祖先（含自身），最多合并 %d 条。\n'
+MSG_SQUASH_PREVIEW_FMT='将合并以下 %d 条提交（旧 → 新）：\n'
+MSG_SQUASH_MSG_PROMPT="新 commit message（逐行输入；单独一行 Q 提交；直接 Q = 走编辑器拼接默认；:q 取消）："
+MSG_SQUASH_CANCELLED="已取消。"
+MSG_SQUASH_CONTINUE="继续？"
+
+# ── drop-commit.sh ──────────────────────────────────────────────
+MSG_DROP_TITLE="drop-commit（从历史中删除此 commit）"
+MSG_DROP_PURPOSE="作用: 把此 commit 从分支历史里抽掉，下游 commit 重新 replay (新 SHA)"
+MSG_DROP_WHEN="场景: 误提交（密码/调试代码） / 完全没用的 WIP / 重复 commit / 想抹掉的尝试"
+MSG_DROP_CONTRAST="对比: revert 是加反向 commit（保留历史）；drop 是真删（重写历史）"
+MSG_DROP_DIRTY_TREE="工作区有未提交改动，请先提交或 stash。"
+MSG_DROP_NOT_ANCESTOR_FMT='%s 不在当前分支祖先链上。\n'
+MSG_DROP_ROOT_COMMIT_FMT='%s 是根 commit，没有父，rebase 无法移除。\n'
+MSG_DROP_ROOT_HINT="真要删根 commit 需要 git update-ref 等手段，手动处理。"
+MSG_DROP_WILL_REMOVE="将移除："
+MSG_DROP_DOWNSTREAM_FMT='下游 %d 条 commit 会 replay（SHA 会变）：\n'
+MSG_DROP_DOWNSTREAM_HINT="  （若下游改动依赖此 commit → 冲突时自动 abort）"
+MSG_DROP_IS_HEAD_NOTE="（此 commit 就是 HEAD → 走 git reset --hard HEAD~ 快路径，不动 rebase）"
+MSG_DROP_CONFIRM="确认移除？"
+MSG_DROP_DONE_HEAD="完成。HEAD 已回到上一条 commit。"
+MSG_DROP_DONE_REBASE="完成。此 commit 已从历史中移除。"
+
+# ── fixup.sh ────────────────────────────────────────────────────
+MSG_FIXUP_TITLE="fixup（把工作区改动并入此 commit）"
+MSG_FIXUP_PURPOSE="作用: 创建 fixup commit + 自动 autosquash，把工作区改动合进此 commit"
+MSG_FIXUP_WHEN="场景: 改完文件想合进某老 commit（最常用）；不想产生新 commit 污染历史"
+MSG_FIXUP_PREREQ="前提: 工作区/暂存区必须有改动；冲突时自动 abort"
+MSG_FIXUP_NOT_ANCESTOR_FMT='%s 不在当前分支祖先链上。\n'
+MSG_FIXUP_NO_CHANGES="工作区干净，没改动可 fixup。"
+MSG_FIXUP_WORKFLOW_HINT="工作流：先改文件 → 点此菜单 → 选目标 commit → 自动 fixup + autosquash。"
+MSG_FIXUP_WILL_FOLD="将并入此 commit 的改动："
+MSG_FIXUP_ASK_INCLUDE_UNSTAGED="暂存区已有内容；连未 add 的也一起 fixup 吗？[y/N] "
+MSG_FIXUP_ASK_ADD_ALL="没东西在暂存区，全部 git add 后再 fixup？[Y/n] "
+MSG_FIXUP_EMPTY_INDEX="暂存区为空，没东西 fixup，已取消。"
+MSG_FIXUP_TARGET_FMT='目标：%s  "%s"\n'
+MSG_FIXUP_CONFIRM="确认 fixup + autosquash？[Y/n] "
+MSG_FIXUP_CANCELLED="已取消，暂存区状态保持不变。"
+MSG_FIXUP_CREATED="  + fixup commit 已创建"
+MSG_FIXUP_DONE_FMT='完成。改动已合入原 %s（autosquash 后 SHA 已更新）。\n'
+
+# ── commit-fixup-into.sh ────────────────────────────────────────
+MSG_CFIX_TITLE="commit→fixup（把此 commit 折叠进祖先 commit）"
+MSG_CFIX_PURPOSE="作用: 把此 commit 作为 fixup 折进同分支某个更早的 commit"
+MSG_CFIX_WHEN="场景: HEAD 上发现某 fix 应该属于早期 commit，想放回正确位置"
+MSG_CFIX_CONTRAST="区别: fixup.sh 用工作区改动；本菜单用已存在的 commit"
+MSG_CFIX_DIRTY_TREE="工作区有未提交改动，请先提交或 stash。"
+MSG_CFIX_NOT_ANCESTOR_SRC="源 commit 不在当前分支祖先链上。"
+MSG_CFIX_HEADER="把此 commit 折叠 (fixup) 进另一个 commit。"
+MSG_CFIX_TARGET_HINT="目标必须是源的祖先（在历史上更早）。提示：从 Zed Graph 复制目标 commit 的 SHA。"
+MSG_CFIX_TARGET_PROMPT="目标 commit SHA（短/长都可）："
+MSG_CFIX_NO_INPUT="未输入，已取消。"
+MSG_CFIX_INVALID_SHA_FMT='无效 SHA：%s\n'
+MSG_CFIX_SAME_COMMIT="目标和源相同，无意义。"
+MSG_CFIX_NOT_ANCESTOR_TGT_FMT='%s 不是源 commit 的祖先（无法 fixup 到那里）。\n'
+MSG_CFIX_PREVIEW="─── 预览 ───"
+MSG_CFIX_SOURCE_LABEL="源:"
+MSG_CFIX_TARGET_LABEL="目标:"
+MSG_CFIX_RANGE_LABEL="rebase 范围 (旧→新):"
+MSG_CFIX_CONTINUE="继续？"
+MSG_CFIX_DONE="完成。源已折叠进目标 (目标 commit 已更新 SHA)。"
