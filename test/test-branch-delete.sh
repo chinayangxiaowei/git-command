@@ -37,12 +37,12 @@ SHA_B=$(git rev-parse HEAD~1)  # b
 SHA_A=$(git rev-parse HEAD~2)  # a
 SHA_C=$(git rev-parse HEAD)    # c (HEAD = main)
 
-# Case 1: 此 commit 无分支 → exit 0 + "没有本地分支可删"
+# Case 1: 此 commit 无分支 → exit 0 + en/zh-stable 标志（"branches" 或 "本地分支" 都行）
 out=$(echo "" | bash "$SCRIPT" "$SHA_A" 2>&1) && ec=0 || ec=$?
-if [ "$ec" -eq 0 ] && echo "$out" | grep -q "没有本地分支可删"; then
+if [ "$ec" -eq 0 ] && echo "$out" | grep -qE "(No local branches|没有本地分支)"; then
   mark_pass "无分支可删 → 0 退出"
 else
-  mark_fail "无分支可删（ec=$ec）"
+  mark_fail "无分支可删 (ec=$ec)"
 fi
 
 # Case 2: 1 个分支 → 喂 y 确认 → 删成功
@@ -87,7 +87,7 @@ git branch -D beta 2>/dev/null || true
 
 # Case 5: 拒绝删当前分支 (main 指向 SHA_C，HEAD on main)
 out=$(printf 'y\n' | bash "$SCRIPT" "$SHA_C" 2>&1) && ec=0 || ec=$?
-if [ "$ec" -ne 0 ] && echo "$out" | grep -q "无法删当前所在分支"; then
+if [ "$ec" -ne 0 ] && echo "$out" | grep -qE "(Cannot delete the currently checked-out|无法删当前所在分支)"; then
   mark_pass "拒绝删当前分支"
 else
   mark_fail "应拒绝删当前分支 ec=$ec"
@@ -97,7 +97,7 @@ fi
 git branch foo "$SHA_B"
 git branch bar "$SHA_B"
 out=$(printf 'nonexistent\n' | bash "$SCRIPT" "$SHA_B" 2>&1) && ec=0 || ec=$?
-if [ "$ec" -ne 0 ] && echo "$out" | grep -q "不在指向此 commit 的分支列表里"; then
+if [ "$ec" -ne 0 ] && echo "$out" | grep -qE "(not in the at-this-commit list|不在指向此 commit 的分支列表里)"; then
   mark_pass "拒绝列表外分支名"
 else
   mark_fail "应拒绝列表外名字 ec=$ec"

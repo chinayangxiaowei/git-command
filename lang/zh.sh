@@ -110,3 +110,79 @@ MSG_REVERT_WHEN="场景: 已 push 的 commit 想撤销（不能用 reset 改公�
 MSG_REVERT_CONTRAST="对比: reset 是改历史，revert 是加新历史；冲突时自动 abort"
 MSG_REVERT_DIRTY_TREE="工作区有未提交改动，请先提交或 stash。"
 MSG_REVERT_CONFIRM_FMT='在 HEAD 之上生成反向提交以撤销 %s？\n'
+
+# ── cherry-pick.sh ──────────────────────────────────────────────
+MSG_CHERRY_PICK_TITLE="cherry-pick（复制此 commit 到当前分支顶部）"
+MSG_CHERRY_PICK_PURPOSE="作用: 把此 commit 的改动复制到当前分支顶上，形成新 commit (新 SHA)"
+MSG_CHERRY_PICK_WHEN="场景: 跨分支搬 hotfix / 从同事分支偷一条 / 从 reflog 救回 commit"
+MSG_CHERRY_PICK_NOTE="注意: 源 commit 不被删除；同分支无意义；冲突时自动 abort"
+MSG_CHERRY_PICK_CURRENT_FMT='当前分支：%s\n'
+MSG_CHERRY_PICK_DIRTY_TREE="工作区有未提交改动，请先提交或 stash。"
+MSG_CHERRY_PICK_CONFIRM_FMT='把 %s cherry-pick 到 %s？'
+
+# ── branch-from.sh ──────────────────────────────────────────────
+MSG_BRANCH_FROM_TITLE="branch-from（从此 commit 创建新分支）"
+MSG_BRANCH_FROM_PURPOSE="作用: 在此 commit 处创建新分支并切换过去"
+MSG_BRANCH_FROM_WHEN="场景: 想从老 commit 起一条新支线 / 给特定状态保留命名引用"
+MSG_BRANCH_FROM_CONTRAST="区别: 临时试错请用 try-branch（自动 try/前缀 + 清理提示）"
+MSG_BRANCH_FROM_NAME_PROMPT="新分支名（基于此提交）："
+MSG_BRANCH_FROM_NO_NAME="未输入分支名，已取消。"
+
+# ── try-branch.sh ───────────────────────────────────────────────
+MSG_TRY_BRANCH_TITLE="try-branch（从此 commit 起临时分支测试）"
+MSG_TRY_BRANCH_PURPOSE="作用: 在此 commit 创建 try/<branch-slug>-<sha> 命名的分支，可立即切换过去"
+MSG_TRY_BRANCH_WHEN="场景: 想试错而不污染当前分支；测某个老 commit 的状态"
+MSG_TRY_BRANCH_HINT="提示: 结尾打印「回原分支」+「删此分支」的命令，避免用完忘了清理"
+MSG_TRY_BRANCH_DETACHED_HINT="git switch -  # 之前是 detached，用 reflog 查"
+MSG_TRY_BRANCH_FROM_FMT='原分支：%s\n起点：  %s\n'
+MSG_TRY_BRANCH_NAME_PROMPT_FMT='新分支名（回车=%s）：'
+MSG_TRY_BRANCH_EXISTS_FMT='分支已存在：%s\n'
+MSG_TRY_BRANCH_SWITCH_PROMPT="创建后立即切换过去？[Y/n] "
+MSG_TRY_BRANCH_CREATED_FMT='已创建 %s（未切换）\n'
+MSG_TRY_BRANCH_CLEANUP_HEADER="用完清理："
+MSG_TRY_BRANCH_CLEANUP_RETURN_FMT='  回原分支：    %s\n'
+MSG_TRY_BRANCH_CLEANUP_DELETE_FMT='  删此临时分支：git branch -D %s\n'
+
+# ── stash-push.sh ───────────────────────────────────────────────
+MSG_STASH_PUSH_TITLE="stash-push（收起当前改动到带名字的 stash）"
+MSG_STASH_PUSH_PURPOSE="作用: 把已跟踪文件的改动收进 stash，工作区清空；输入一个名字方便日后找"
+MSG_STASH_PUSH_WHEN="场景: 想切分支但有 WIP 改动 / 暂时收起做别的事 / 暂存好让 reset 干净"
+MSG_STASH_PUSH_NOTE="不带 -u: untracked 文件留在工作区（避免 Graph 多出 untracked snapshot 节点）"
+MSG_STASH_PUSH_CLEAN="工作区干净，没改动可 stash。"
+MSG_STASH_PUSH_WILL_STASH="将 stash 以下改动："
+MSG_STASH_PUSH_NAME_PROMPT="起个名字（之后好认）："
+MSG_STASH_PUSH_NO_NAME="未输入名字，已取消。"
+MSG_STASH_PUSH_DONE_HINT="完成。回看：git stash list 或菜单「Pop 最近的 stash」"
+MSG_STASH_PUSH_UNTRACKED_NOTE="提示：未跟踪文件（untracked）没被 stash 进来，仍在工作区。"
+
+# ── stash-pop.sh ────────────────────────────────────────────────
+MSG_STASH_POP_TITLE="stash-pop（应用最近的 stash 到工作区）"
+MSG_STASH_POP_PURPOSE="作用: 把 stash@{0} 的改动应用回工作区，pop 成功则 stash 自动 drop"
+MSG_STASH_POP_WHEN="场景: 之前用 stash-push 收起了改动，现在想拿回来继续"
+MSG_STASH_POP_NOTE="注意: 冲突时 stash 不会自动 drop；手动解决冲突后再 git stash drop"
+MSG_STASH_POP_EMPTY="当前没有 stash 可 pop。"
+MSG_STASH_POP_LIST_HEADER="最近的 stash 列表："
+MSG_STASH_POP_PREVIEW_HEADER="stash@{0} 内容预览："
+MSG_STASH_POP_CONFIRM="把 stash@{0} pop 到当前工作区？"
+MSG_STASH_POP_CONFLICT="pop 出现冲突——stash 还在（不会自动 drop）。"
+MSG_STASH_POP_CONFLICT_HINT="解决冲突 + git add 后，运行  git stash drop  扔掉这条 stash。"
+
+# ── branch-delete.sh ────────────────────────────────────────────
+MSG_BRANCH_DELETE_TITLE="branch-delete [删除指向此 commit 的本地分支]"
+MSG_BRANCH_DELETE_PURPOSE="作用: 删本地分支（可选同时删远端）"
+MSG_BRANCH_DELETE_WHEN="场景: 清理已合并 / 试错完的分支；批量删 try/* feat/* 等"
+MSG_BRANCH_DELETE_NOTE="注意: 用 git branch -D 强删，不检查是否 merged"
+MSG_BRANCH_DELETE_NONE="此 commit 上没有本地分支可删。"
+MSG_BRANCH_DELETE_ONE_FMT='此 commit 上唯一分支: %s\n'
+MSG_BRANCH_DELETE_LIST_HEADER="此 commit 上的本地分支:"
+MSG_BRANCH_DELETE_SELECT_PROMPT="选哪个？(分支名或编号): "
+MSG_BRANCH_DELETE_NO_INPUT="未输入，已取消。"
+MSG_BRANCH_DELETE_NOT_IN_LIST_FMT="分支 '%s' 不在指向此 commit 的分支列表里。\n"
+MSG_BRANCH_DELETE_IS_CURRENT_FMT="无法删当前所在分支 '%s'。\n"
+MSG_BRANCH_DELETE_CURRENT_HINT="先切到别的分支: git switch <other-branch>"
+MSG_BRANCH_DELETE_CONFIRM_FMT="删除本地分支 '%s'？"
+MSG_BRANCH_DELETE_LOCAL_DONE="本地分支已删除。"
+MSG_BRANCH_DELETE_NO_REMOTE="(没有 remote，跳过远端)"
+MSG_BRANCH_DELETE_REMOTE_ABSENT_FMT="(远端 [%s] 上没有此分支，跳过)"
+MSG_BRANCH_DELETE_REMOTE_PROMPT_FMT="也从远端 [%s] 删除？[y/N] "
+MSG_BRANCH_DELETE_REMOTE_DONE="远端分支已删除。"

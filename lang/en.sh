@@ -110,3 +110,79 @@ MSG_REVERT_WHEN="When:  an already-pushed commit needs to be undone (reset would
 MSG_REVERT_CONTRAST="Note:  reset rewrites history; revert appends to it. Auto-aborts on conflicts."
 MSG_REVERT_DIRTY_TREE="Working tree has uncommitted changes; commit or stash first."
 MSG_REVERT_CONFIRM_FMT='Generate an inverse commit on top of HEAD to undo %s?\n'
+
+# ── cherry-pick.sh ──────────────────────────────────────────────
+MSG_CHERRY_PICK_TITLE="cherry-pick (copy this commit to the top of current branch)"
+MSG_CHERRY_PICK_PURPOSE="What:  copy this commit's changes onto the current branch tip as a new commit (new SHA)"
+MSG_CHERRY_PICK_WHEN="When:  carry a hotfix across branches / grab a single commit from a coworker / recover via reflog"
+MSG_CHERRY_PICK_NOTE="Note:  source commit is not deleted; same-branch is meaningless; auto-aborts on conflict"
+MSG_CHERRY_PICK_CURRENT_FMT='Current branch: %s\n'
+MSG_CHERRY_PICK_DIRTY_TREE="Working tree has uncommitted changes; commit or stash first."
+MSG_CHERRY_PICK_CONFIRM_FMT='Cherry-pick %s onto %s?'
+
+# ── branch-from.sh ──────────────────────────────────────────────
+MSG_BRANCH_FROM_TITLE="branch-from (create a new branch from this commit)"
+MSG_BRANCH_FROM_PURPOSE="What:  create a new branch at this commit and switch to it"
+MSG_BRANCH_FROM_WHEN="When:  start a new line of work from an old commit / keep a named ref to a specific state"
+MSG_BRANCH_FROM_CONTRAST="Note:  for throwaway experiments use try-branch (auto try/ prefix + cleanup hint)"
+MSG_BRANCH_FROM_NAME_PROMPT="New branch name (based on this commit): "
+MSG_BRANCH_FROM_NO_NAME="No branch name given; cancelled."
+
+# ── try-branch.sh ───────────────────────────────────────────────
+MSG_TRY_BRANCH_TITLE="try-branch (throwaway branch from this commit)"
+MSG_TRY_BRANCH_PURPOSE="What:  create a branch named try/<base-slug>-<sha> from this commit, switch immediately"
+MSG_TRY_BRANCH_WHEN="When:  experiment without polluting current branch / inspect the state at an old commit"
+MSG_TRY_BRANCH_HINT="Hint:  on exit, prints 'return to original' + 'delete this branch' commands as reminders"
+MSG_TRY_BRANCH_DETACHED_HINT="git switch -  # was detached; consult reflog"
+MSG_TRY_BRANCH_FROM_FMT='Original branch: %s\nStart point:     %s\n'
+MSG_TRY_BRANCH_NAME_PROMPT_FMT='New branch name (Enter = %s): '
+MSG_TRY_BRANCH_EXISTS_FMT='Branch already exists: %s\n'
+MSG_TRY_BRANCH_SWITCH_PROMPT="Switch to it after creating? [Y/n] "
+MSG_TRY_BRANCH_CREATED_FMT='Created %s (not switched)\n'
+MSG_TRY_BRANCH_CLEANUP_HEADER="When done, clean up with:"
+MSG_TRY_BRANCH_CLEANUP_RETURN_FMT='  return to original: %s\n'
+MSG_TRY_BRANCH_CLEANUP_DELETE_FMT='  delete this branch: git branch -D %s\n'
+
+# ── stash-push.sh ───────────────────────────────────────────────
+MSG_STASH_PUSH_TITLE="stash-push (stash current changes with a name)"
+MSG_STASH_PUSH_PURPOSE="What:  stash tracked changes with a label, leaving the working tree clean"
+MSG_STASH_PUSH_WHEN="When:  about to switch branches with WIP / set work aside briefly / pre-clean before reset"
+MSG_STASH_PUSH_NOTE="Note:  -u is NOT used; untracked files stay in the working tree (avoids spurious Git Graph snapshot nodes)"
+MSG_STASH_PUSH_CLEAN="Working tree is clean; nothing to stash."
+MSG_STASH_PUSH_WILL_STASH="Will stash the following changes:"
+MSG_STASH_PUSH_NAME_PROMPT="Pick a name (helps you find it later): "
+MSG_STASH_PUSH_NO_NAME="No name given; cancelled."
+MSG_STASH_PUSH_DONE_HINT="Done. View: git stash list, or use the menu 'Pop most recent stash'."
+MSG_STASH_PUSH_UNTRACKED_NOTE="Note: untracked files were NOT stashed and remain in the working tree."
+
+# ── stash-pop.sh ────────────────────────────────────────────────
+MSG_STASH_POP_TITLE="stash-pop (apply the most recent stash to the working tree)"
+MSG_STASH_POP_PURPOSE="What:  apply stash@{0} to the working tree; on success, the stash is auto-dropped"
+MSG_STASH_POP_WHEN="When:  earlier stashed changes need to come back"
+MSG_STASH_POP_NOTE="Note:  on conflict the stash is NOT auto-dropped; resolve conflicts then run git stash drop"
+MSG_STASH_POP_EMPTY="No stash available to pop."
+MSG_STASH_POP_LIST_HEADER="Recent stashes:"
+MSG_STASH_POP_PREVIEW_HEADER="stash@{0} preview:"
+MSG_STASH_POP_CONFIRM="Pop stash@{0} into the current working tree?"
+MSG_STASH_POP_CONFLICT="Pop hit conflicts — the stash is preserved (not auto-dropped)."
+MSG_STASH_POP_CONFLICT_HINT="Resolve conflicts + git add, then run  git stash drop  to discard it."
+
+# ── branch-delete.sh ────────────────────────────────────────────
+MSG_BRANCH_DELETE_TITLE="branch-delete (delete local branches pointing at this commit)"
+MSG_BRANCH_DELETE_PURPOSE="What:  delete a local branch (optionally also the remote one)"
+MSG_BRANCH_DELETE_WHEN="When:  tidy up merged/throwaway branches; bulk-prune try/* feat/* etc."
+MSG_BRANCH_DELETE_NOTE="Note:  uses git branch -D (force delete; ignores merged status)"
+MSG_BRANCH_DELETE_NONE="No local branches at this commit to delete."
+MSG_BRANCH_DELETE_ONE_FMT='Sole branch at this commit: %s\n'
+MSG_BRANCH_DELETE_LIST_HEADER="Local branches at this commit:"
+MSG_BRANCH_DELETE_SELECT_PROMPT="Pick one (branch name or number): "
+MSG_BRANCH_DELETE_NO_INPUT="No input; cancelled."
+MSG_BRANCH_DELETE_NOT_IN_LIST_FMT="Branch '%s' is not in the at-this-commit list.\n"
+MSG_BRANCH_DELETE_IS_CURRENT_FMT="Cannot delete the currently checked-out branch '%s'.\n"
+MSG_BRANCH_DELETE_CURRENT_HINT="Switch to another branch first: git switch <other-branch>"
+MSG_BRANCH_DELETE_CONFIRM_FMT="Delete local branch '%s'?"
+MSG_BRANCH_DELETE_LOCAL_DONE="Local branch deleted."
+MSG_BRANCH_DELETE_NO_REMOTE="(no remote configured; skipping remote)"
+MSG_BRANCH_DELETE_REMOTE_ABSENT_FMT="(branch not present on remote [%s]; skipping)"
+MSG_BRANCH_DELETE_REMOTE_PROMPT_FMT="Also delete from remote [%s]? [y/N] "
+MSG_BRANCH_DELETE_REMOTE_DONE="Remote branch deleted."

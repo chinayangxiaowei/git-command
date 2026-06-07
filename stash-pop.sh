@@ -3,28 +3,28 @@ set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/lib.sh"
 
-show_intro "stash-pop（应用最近的 stash 到工作区）" \
-  "作用: 把 stash@{0} 的改动应用回工作区，pop 成功则 stash 自动 drop" \
-  "场景: 之前用 stash-push 收起了改动，现在想拿回来继续" \
-  "注意: 冲突时 stash 不会自动 drop；手动解决冲突后再 git stash drop"
+show_intro "$MSG_STASH_POP_TITLE" \
+  "$MSG_STASH_POP_PURPOSE" \
+  "$MSG_STASH_POP_WHEN" \
+  "$MSG_STASH_POP_NOTE"
 
 if ! git rev-parse --verify --quiet stash@{0} >/dev/null 2>&1; then
-  echo "当前没有 stash 可 pop。" >&2
+  echo "$MSG_STASH_POP_EMPTY" >&2
   exit 1
 fi
 
-echo "最近的 stash 列表："
+echo "$MSG_STASH_POP_LIST_HEADER"
 git --no-pager stash list | head -5
 echo
-echo "stash@{0} 内容预览："
+echo "$MSG_STASH_POP_PREVIEW_HEADER"
 git --no-pager stash show --stat stash@{0}
 echo
 
-confirm "把 stash@{0} pop 到当前工作区？"
+confirm "$MSG_STASH_POP_CONFIRM"
 
 if ! git stash pop; then
   echo
-  echo "pop 出现冲突——stash 还在（不会自动 drop）。" >&2
-  echo "解决冲突 + git add 后，运行  git stash drop  扔掉这条 stash。" >&2
+  echo "$MSG_STASH_POP_CONFLICT" >&2
+  echo "$MSG_STASH_POP_CONFLICT_HINT" >&2
   exit 1
 fi
