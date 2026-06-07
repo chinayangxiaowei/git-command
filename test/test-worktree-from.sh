@@ -140,6 +140,28 @@ if [ -d "$SB/$expected_path" ]; then
   fi
 fi
 
+# fix: 喂回车接受默认 name = slug(subject)-short_sha
+# SHA3 subject = "feat(payment): add stripe" → slug = "feat(payment)-add-stripe"
+short3=$(git rev-parse --short "$SHA3")
+default_name="feat(payment)-add-stripe-${short3}"
+fix_path="fix/$default_name"
+echo "" | $SCRIPT_BIN fix "$SHA3" >/dev/null 2>&1 && ec=0 || ec=$?
+if [ "$ec" -eq 0 ] && [ -d "$SB/$fix_path" ]; then
+  pass=$((pass+1)); echo "  ✓ fix 默认 name: $default_name"
+else
+  fail=$((fail+1)); echo "  ✗ fix 路径错 ec=$ec expected=$fix_path"
+fi
+
+# fix 分支同名
+if [ -d "$SB/$fix_path" ]; then
+  br=$(git -C "$SB/$fix_path" rev-parse --abbrev-ref HEAD)
+  if [ "$br" = "$fix_path" ]; then
+    pass=$((pass+1)); echo "  ✓ fix 分支同名"
+  else
+    fail=$((fail+1)); echo "  ✗ fix 分支名错: $br"
+  fi
+fi
+
 teardown_sandbox "$SB"
 cd "$DIR"
 

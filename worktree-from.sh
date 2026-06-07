@@ -104,9 +104,40 @@ main() {
     exit 0
   fi
 
-  # 后续 Task 实现 fix/feat/hot
-  echo "TODO: implement $purpose flow" >&2
-  exit 1
+  # fix / feat / hot — 用户输入 name，默认 slug(subject)-short_sha
+  local subject default_name name
+  subject=$(git log -1 --format='%s' "$SHA")
+  default_name="$(slug "$subject")-${short_sha}"
+  # slug 全删空时 fallback 到 base-slug
+  if [ "$default_name" = "-${short_sha}" ]; then
+    default_name="${base_slug}-${short_sha}"
+  fi
+
+  read -erp "分支名（回车=${default_name}）: " name
+  name="${name:-$default_name}"
+  name="$(slug "$name")"   # 再次 sanitize 防用户输入非法字符
+  if [ -z "$name" ]; then
+    name="${base_slug}-${short_sha}"
+  fi
+
+  rel_path="${purpose}/${name}"
+  abs_path="$container/$rel_path"
+  branch="$rel_path"
+
+  if [ -e "$abs_path" ]; then
+    echo "路径已存在: $abs_path" >&2; exit 1
+  fi
+  if git show-ref --verify --quiet "refs/heads/$branch"; then
+    echo "分支已存在: $branch" >&2; exit 1
+  fi
+
+  git worktree add -b "$branch" "$abs_path" "$SHA"
+
+  echo
+  echo "✓ worktree created: $abs_path"
+  echo "  分支: $branch"
+  echo "  清理: git worktree remove \"$abs_path\" && git branch -D \"$branch\""
+  command -v zed >/dev/null && zed "$abs_path" || true
 }
 
 # Source guard: 仅作为脚本直接执行时跑 main
