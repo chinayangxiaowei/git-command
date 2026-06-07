@@ -120,6 +120,26 @@ if [ -d "$SB/review/$short1" ]; then
   fi
 fi
 
+# try: 自动命名 try/<base_slug>-<short_sha>/，base_slug=main（当前在 main worktree）
+short2=$(git rev-parse --short "$SHA2")
+expected_path="try/main-$short2"
+$SCRIPT_BIN try "$SHA2" >/dev/null 2>&1 && ec=0 || ec=$?
+if [ "$ec" -eq 0 ] && [ -d "$SB/$expected_path" ]; then
+  pass=$((pass+1)); echo "  ✓ try 路径创建: $expected_path"
+else
+  fail=$((fail+1)); echo "  ✗ try 路径错 ec=$ec expected=$expected_path"
+fi
+
+# try 分支名 = 路径
+if [ -d "$SB/$expected_path" ]; then
+  br=$(git -C "$SB/$expected_path" rev-parse --abbrev-ref HEAD)
+  if [ "$br" = "$expected_path" ]; then
+    pass=$((pass+1)); echo "  ✓ try 分支同名"
+  else
+    fail=$((fail+1)); echo "  ✗ try 分支名错: $br"
+  fi
+fi
+
 teardown_sandbox "$SB"
 cd "$DIR"
 

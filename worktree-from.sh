@@ -73,7 +73,38 @@ main() {
     exit 0
   fi
 
-  # 后续 Task 实现 try/fix/feat/hot
+  local base_slug current
+  current=$(git rev-parse --abbrev-ref HEAD)
+  if [ "$current" = "HEAD" ]; then
+    base_slug="detached"
+  else
+    base_slug="${current//\//-}"
+  fi
+
+  local branch
+  if [ "$purpose" = "try" ]; then
+    rel_path="try/${base_slug}-${short_sha}"
+    abs_path="$container/$rel_path"
+    branch="$rel_path"
+
+    if [ -e "$abs_path" ]; then
+      echo "路径已存在: $abs_path" >&2; exit 1
+    fi
+    if git show-ref --verify --quiet "refs/heads/$branch"; then
+      echo "分支已存在: $branch" >&2; exit 1
+    fi
+
+    git worktree add -b "$branch" "$abs_path" "$SHA"
+
+    echo
+    echo "✓ worktree created: $abs_path"
+    echo "  分支: $branch"
+    echo "  清理: git worktree remove \"$abs_path\" && git branch -D \"$branch\""
+    command -v zed >/dev/null && zed "$abs_path" || true
+    exit 0
+  fi
+
+  # 后续 Task 实现 fix/feat/hot
   echo "TODO: implement $purpose flow" >&2
   exit 1
 }
