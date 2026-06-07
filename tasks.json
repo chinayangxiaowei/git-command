@@ -207,6 +207,13 @@
     "tags": ["git-command"],
     "reveal": "always"
   },
+  {
+    "label": "Git · 删除指向此 commit 的本地分支（可选远端）  ($ZED_GIT_SHA_SHORT)",
+    "command": "bash",
+    "args": ["__GIT_COMMAND_DIR__/branch-delete.sh", "$ZED_GIT_SHA"],
+    "tags": ["git-command"],
+    "reveal": "always"
+  },
 
   {
     "label": "──── 7. Tag ────",
