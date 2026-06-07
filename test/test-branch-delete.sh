@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 集成测试 for branch-delete.sh
-# 跑法: bash test/test-branch-delete.sh
+# Integration tests for branch-delete.sh
+# Run: bash test/test-branch-delete.sh
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -12,7 +12,7 @@ fail=0
 mark_pass() { pass=$((pass+1)); echo "  ✓ $1"; }
 mark_fail() { fail=$((fail+1)); echo "  ✗ $1"; }
 
-# 建沙箱：普通 git repo（branch-delete 不需要 bare+wt 布局）
+# Sandbox: plain git repo (branch-delete doesn't need bare+wt layout)
 setup_sandbox() {
   local sb
   sb=$(mktemp -d)
@@ -28,7 +28,7 @@ setup_sandbox() {
 
 teardown() { cd /; rm -rf "$1"; }
 
-echo "── branch-delete 集成测试 ──"
+echo "── branch-delete integration tests ──"
 SB=$(setup_sandbox)
 echo "  sandbox: $SB"
 cd "$SB"
@@ -37,70 +37,69 @@ SHA_B=$(git rev-parse HEAD~1)  # b
 SHA_A=$(git rev-parse HEAD~2)  # a
 SHA_C=$(git rev-parse HEAD)    # c (HEAD = main)
 
-# Case 1: 此 commit 无分支 → exit 0 + en/zh-stable 标志（"branches" 或 "本地分支" 都行）
+# Case 1: no branches at this commit → exit 0 + en/zh stable marker
 out=$(echo "" | bash "$SCRIPT" "$SHA_A" 2>&1) && ec=0 || ec=$?
 if [ "$ec" -eq 0 ] && echo "$out" | grep -qE "(No local branches|没有本地分支)"; then
-  mark_pass "无分支可删 → 0 退出"
+  mark_pass "no branches → exit 0"
 else
-  mark_fail "无分支可删 (ec=$ec)"
+  mark_fail "no branches (ec=$ec)"
 fi
 
-# Case 2: 1 个分支 → 喂 y 确认 → 删成功
+# Case 2: 1 branch → feed y → deleted
 git branch lonely "$SHA_B"
 out=$(printf 'y\n' | bash "$SCRIPT" "$SHA_B" 2>&1) && ec=0 || ec=$?
 if [ "$ec" -eq 0 ] && ! git show-ref --verify --quiet "refs/heads/lonely"; then
-  mark_pass "唯一分支删除成功"
+  mark_pass "sole branch deleted"
 else
-  mark_fail "唯一分支应删除 ec=$ec"
+  mark_fail "sole branch should be deleted ec=$ec"
 fi
 
-# Case 3: 多个分支 + 输入编号
+# Case 3: multiple branches + input by number
 git branch alpha "$SHA_B"
 git branch beta "$SHA_B"
 git branch gamma "$SHA_B"
-# 输入 "2\ny\n" → 选 beta（按字母序 alpha=1, beta=2, gamma=3）
+# Input "2\ny\n" → pick second by listed order
 out=$(printf '2\ny\n' | bash "$SCRIPT" "$SHA_B" 2>&1) && ec=0 || ec=$?
-# 实际顺序看 git branch --points-at 输出。git 通常按字母序排但不保证。
-# 我们抓 stdout 里实际哪条被打印为 2.，再判断哪个分支应被删
+# Grab the actual line that was numbered 2
 target=$(echo "$out" | grep -E '^\s*2\.' | sed -E 's/.*2\. *//')
 if [ -n "$target" ] && ! git show-ref --verify --quiet "refs/heads/$target"; then
-  mark_pass "多分支按编号删除 ($target)"
+  mark_pass "delete by number ($target)"
 else
-  mark_fail "多分支按编号删除失败 ec=$ec target='$target'"
+  mark_fail "delete by number failed ec=$ec target='$target'"
 fi
-# 清剩下两个
+# Cleanup remaining
 git branch -D alpha 2>/dev/null || true
 git branch -D beta  2>/dev/null || true
 git branch -D gamma 2>/dev/null || true
 
-# Case 4: 多个分支 + 输入分支名
+# Case 4: multiple branches + input by name
 git branch alpha "$SHA_B"
 git branch beta "$SHA_B"
 out=$(printf 'alpha\ny\n' | bash "$SCRIPT" "$SHA_B" 2>&1) && ec=0 || ec=$?
 if [ "$ec" -eq 0 ] && ! git show-ref --verify --quiet "refs/heads/alpha" \
                    && git show-ref --verify --quiet "refs/heads/beta"; then
-  mark_pass "多分支按名字删除"
+  mark_pass "delete by name"
 else
-  mark_fail "多分支按名字删除失败 ec=$ec"
+  mark_fail "delete by name failed ec=$ec"
 fi
 git branch -D beta 2>/dev/null || true
 
-# Case 5: 拒绝删当前分支 (main 指向 SHA_C，HEAD on main)
+# Case 5: refuse to delete currently-checked-out branch (main → SHA_C, HEAD on main)
 out=$(printf 'y\n' | bash "$SCRIPT" "$SHA_C" 2>&1) && ec=0 || ec=$?
 if [ "$ec" -ne 0 ] && echo "$out" | grep -qE "(Cannot delete the currently checked-out|无法删当前所在分支)"; then
-  mark_pass "拒绝删当前分支"
+  mark_pass "refuse to delete current branch"
 else
-  mark_fail "应拒绝删当前分支 ec=$ec"
+  mark_fail "should refuse current branch ec=$ec"
 fi
 
-# Case 6: 输入不在列表里的分支名 → exit 1
+# Case 6: input a name not in the list → exit 1
 git branch foo "$SHA_B"
 git branch bar "$SHA_B"
 out=$(printf 'nonexistent\n' | bash "$SCRIPT" "$SHA_B" 2>&1) && ec=0 || ec=$?
 if [ "$ec" -ne 0 ] && echo "$out" | grep -qE "(not in the at-this-commit list|不在指向此 commit 的分支列表里)"; then
-  mark_pass "拒绝列表外分支名"
+  mark_pass "reject name not in list"
 else
-  mark_fail "应拒绝列表外名字 ec=$ec"
+  mark_fail "should reject name not in list ec=$ec"
 fi
 git branch -D foo bar 2>/dev/null || true
 
@@ -108,6 +107,6 @@ teardown "$SB"
 cd "$DIR"
 
 echo
-echo "── 总计 ──"
+echo "── Total ──"
 echo "PASS: $pass   FAIL: $fail"
 [ "$fail" -eq 0 ]

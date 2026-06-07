@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 集成测试 for worktree-remove.sh
-# 跑法: bash test/test-worktree-remove.sh
+# Integration tests for worktree-remove.sh
+# Run: bash test/test-worktree-remove.sh
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -33,7 +33,7 @@ setup_sandbox() {
 
 teardown() { cd /; rm -rf "$1"; }
 
-echo "── worktree-remove 集成测试 ──"
+echo "── worktree-remove integration tests ──"
 SB=$(setup_sandbox)
 echo "  sandbox: $SB"
 cd "$SB/main"
@@ -41,70 +41,70 @@ cd "$SB/main"
 SHA=$(git rev-parse HEAD)
 short=$(git rev-parse --short HEAD)
 
-# Case 1: review 类 0 worktree → exit 0
+# Case 1: review with no worktrees → exit 0
 out=$(echo "" | bash "$SCRIPT" review 2>&1) && ec=0 || ec=$?
 if [ "$ec" -eq 0 ] && echo "$out" | grep -qE "(has no worktree to remove|没有 worktree 可删)"; then
-  mark_pass "[review] 0 worktree 正常退出"
+  mark_pass "[review] empty state exits cleanly"
 else
-  mark_fail "[review] 应正常退出 ec=$ec"
+  mark_fail "[review] should exit cleanly ec=$ec"
 fi
 
-# Case 2: review 类，建一个，粘贴名字删除
+# Case 2: review with one worktree → paste name to delete
 git worktree add --detach "$SB/review/$short" "$SHA" >/dev/null 2>&1
 out=$(printf 'review/%s\n' "$short" | bash "$SCRIPT" review 2>&1) && ec=0 || ec=$?
 if [ "$ec" -eq 0 ] && [ ! -d "$SB/review/$short" ]; then
-  mark_pass "[review] 删除成功"
+  mark_pass "[review] deletion succeeded"
 else
-  mark_fail "[review] 删除失败 ec=$ec exists=$([ -d "$SB/review/$short" ] && echo yes || echo no)"
+  mark_fail "[review] deletion failed ec=$ec exists=$([ -d "$SB/review/$short" ] && echo yes || echo no)"
 fi
 
-# Case 3: try 类，建一个，删 worktree 时回答不删分支
+# Case 3: try with one worktree → reply 'n' to keep branch
 git worktree add -b "try/main-$short" "$SB/try/main-$short" "$SHA" >/dev/null 2>&1
-# 输入: try/main-<short>\n + n\n (不删分支)
+# Input: try/main-<short>\n + n\n (don't delete branch)
 out=$(printf 'try/main-%s\nn\n' "$short" | bash "$SCRIPT" try 2>&1) && ec=0 || ec=$?
 branch_exists=$(git show-ref --verify --quiet "refs/heads/try/main-$short" && echo yes || echo no)
 if [ "$ec" -eq 0 ] && [ ! -d "$SB/try/main-$short" ] && [ "$branch_exists" = yes ]; then
-  mark_pass "[try] 删 worktree 保留分支"
+  mark_pass "[try] worktree removed, branch retained"
 else
   mark_fail "[try] ec=$ec dir_gone=$([ ! -d "$SB/try/main-$short" ] && echo yes || echo no) branch_exists=$branch_exists"
 fi
 git branch -D "try/main-$short" 2>/dev/null || true
 
-# Case 4: try 类，建一个，y 同时删分支
+# Case 4: try with one worktree → reply 'y' to also delete the branch
 git worktree add -b "try/main-$short" "$SB/try/main-$short" "$SHA" >/dev/null 2>&1
 out=$(printf 'try/main-%s\ny\n' "$short" | bash "$SCRIPT" try 2>&1) && ec=0 || ec=$?
 branch_exists=$(git show-ref --verify --quiet "refs/heads/try/main-$short" && echo yes || echo no)
 if [ "$ec" -eq 0 ] && [ ! -d "$SB/try/main-$short" ] && [ "$branch_exists" = no ]; then
-  mark_pass "[try] 删 worktree + 分支"
+  mark_pass "[try] worktree + branch deleted"
 else
-  mark_fail "[try] 同时删 ec=$ec branch_exists=$branch_exists"
+  mark_fail "[try] dual deletion ec=$ec branch_exists=$branch_exists"
 fi
 
-# Case 5: 输入不在列表的名字 → exit 1
+# Case 5: name not in list → exit 1
 git worktree add -b "fix/realone" "$SB/fix/realone" "$SHA" >/dev/null 2>&1
 out=$(printf 'fix/nonexistent\n' | bash "$SCRIPT" fix 2>&1) && ec=0 || ec=$?
 if [ "$ec" -ne 0 ] && echo "$out" | grep -qE "(is not in the .* worktree list|不在.*worktree 列表里)"; then
-  mark_pass "[fix] 拒绝列表外名字"
+  mark_pass "[fix] reject name not in list"
 else
-  mark_fail "[fix] 应拒绝 ec=$ec"
+  mark_fail "[fix] should reject name not in list ec=$ec"
 fi
 
-# 清理 fix/realone
+# Cleanup fix/realone
 git worktree remove "$SB/fix/realone" 2>/dev/null || true
 git branch -D fix/realone 2>/dev/null || true
 
-# Case 6: 非法 purpose
+# Case 6: invalid purpose
 out=$(bash "$SCRIPT" badpurpose 2>&1) && ec=0 || ec=$?
 if [ "$ec" -ne 0 ] && echo "$out" | grep -q "invalid purpose"; then
-  mark_pass "拒绝非法 purpose"
+  mark_pass "reject invalid purpose"
 else
-  mark_fail "应拒绝非法 purpose ec=$ec"
+  mark_fail "should reject invalid purpose ec=$ec"
 fi
 
 teardown "$SB"
 cd "$DIR"
 
 echo
-echo "── 总计 ──"
+echo "── Total ──"
 echo "PASS: $pass   FAIL: $fail"
 [ "$fail" -eq 0 ]
