@@ -2,6 +2,12 @@
 # worktree-from.sh — check out this commit in a new worktree
 # Usage: bash worktree-from.sh <purpose> <SHA>
 #   <purpose> ∈ {review, try, fix, feat, hot}
+#
+# NOTE: we intentionally do NOT set -euo pipefail at the top level.
+# The slug() helper below is unit-tested by sourcing this file from
+# test/test-all.sh — putting `set -e` at the top would leak strict
+# mode into the caller's shell. The bottom-of-file source guard
+# enables strict mode only when the file is *executed* directly.
 
 # Slugify a commit subject for use as a branch / path name.
 # Rules:
@@ -18,7 +24,6 @@ slug() {
 }
 
 main() {
-  set -euo pipefail
   local DIR
   DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   # shellcheck source=/dev/null
@@ -142,5 +147,8 @@ main() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  # Enable strict mode only when this file is the entry point. Sourcing
+  # for slug() unit tests (test-all.sh) doesn't get strict mode leaked.
+  set -euo pipefail
   main "$@"
 fi
