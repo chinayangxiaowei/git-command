@@ -15,6 +15,10 @@
 # 之后新建 worktree:
 #   cd project-name
 #   git worktree add <branch>           # 新 worktree 在 ./<branch>/
+#
+# 这个脚本独立运行 (不 source lib.sh)，因为它不需要 Zed pane / i18n /
+# require_bare_layout 等。但它有自己的 EXIT trap，失败时清理本脚本
+# 创建的目录，避免留下半成品 .bare/ + .git + 部分 worktree。
 
 set -euo pipefail
 
@@ -26,17 +30,34 @@ if [[ -e "$NAME" ]]; then
   exit 1
 fi
 
+# Absolute path so cleanup works no matter where cwd ends up.
+PROJECT_DIR="$(pwd)/$NAME"
+# Sentinel: only flip to 1 after we successfully created the directory.
+# Cleanup is conditional on this — never rm a directory that pre-existed.
+WE_CREATED_DIR=0
+SUCCESS=0
+
+_init_cleanup_on_exit() {
+  local rc=$?
+  if [ "$SUCCESS" -eq 1 ]; then
+    return 0   # finished cleanly, nothing to clean
+  fi
+  if [ "$WE_CREATED_DIR" -eq 1 ] && [ -d "$PROJECT_DIR" ]; then
+    # cd somewhere safe so rm -rf doesn't operate on cwd
+    cd / 2>/dev/null || true
+    rm -rf "$PROJECT_DIR"
+    echo "init failed (exit $rc); removed partial project: $PROJECT_DIR" >&2
+  fi
+}
+trap _init_cleanup_on_exit EXIT
+
 mkdir "$NAME"
+WE_CREATED_DIR=1
 cd "$NAME"
 
 if [[ -n "$URL" ]]; then
   echo "Cloning $URL as bare..."
-  if ! git clone --bare "$URL" .bare; then
-    cd ..
-    rmdir "$NAME"
-    echo "clone 失败，已清理空目录。" >&2
-    exit 1
-  fi
+  git clone --bare "$URL" .bare
   # bare 默认 fetch 配置不带 origin/* 远端追踪，补一下
   git --git-dir=.bare config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
   default_branch="$(git --git-dir=.bare symbolic-ref HEAD --short 2>/dev/null || echo main)"
@@ -57,6 +78,9 @@ echo "gitdir: ./.bare" > .git
 
 # 创建主 worktree（跟 default branch 同名子目录）
 git worktree add "$default_branch" "$default_branch"
+
+# Past this point everything succeeded.
+SUCCESS=1
 
 echo
 echo "─── 完成 ───"
