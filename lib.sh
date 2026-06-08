@@ -67,6 +67,12 @@ require_clean_state() {
   fi
   if [ -n "$in_progress" ]; then
     printf "$MSG_LIB_IN_PROGRESS_FMT" "$in_progress" "$hint" >&2
+    # This is a precondition failure — the mid-op state was created by
+    # a *prior* operation, not by this script. Mark _GIT_CMD_DONE so the
+    # EXIT trap's abort branch is short-circuited; otherwise we'd destroy
+    # the user's pre-existing rebase/cherry-pick state they came here to
+    # resolve. exit 1 (not 0) so Zed leaves the pane up with the message.
+    _GIT_CMD_DONE=1
     exit 1
   fi
 }

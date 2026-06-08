@@ -10,6 +10,7 @@ show_intro "$MSG_RESET_HARD_TITLE" \
   "$MSG_RESET_HARD_AFTER"
 
 print_header "$SHA"
+require_clean_state
 
 if ! git merge-base --is-ancestor "$SHA" HEAD; then
   printf "$MSG_RESET_HARD_NOT_ANCESTOR_FMT" "$SHA" >&2
