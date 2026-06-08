@@ -180,12 +180,18 @@ EOF
 chmod +x "$tmpdir/seq"
 
 export GIT_SEQUENCE_EDITOR="$tmpdir/seq"
-git rebase -i "${SHA}^" || true
-
-gitdir="$(git rev-parse --git-dir)"
-if [ ! -d "$gitdir/rebase-merge" ] && [ ! -d "$gitdir/rebase-apply" ]; then
-  echo "$MSG_EDIT_COMMIT_OLD_REBASE_NOT_EDIT" >&2
-  exit 1
+# `git rebase -i` returning non-zero here is the EXPECTED path: our
+# sequence editor changed 'pick' → 'edit', so rebase stops on that
+# commit. But the same non-zero could also mean GIT_SEQUENCE_EDITOR
+# itself failed (permissions, missing tmpdir, …). Distinguish the two
+# by inspecting whether rebase-merge/rebase-apply was created — only
+# the success-stopped-at-edit path leaves those directories behind.
+if ! git rebase -i "${SHA}^"; then
+  gitdir="$(git rev-parse --git-dir)"
+  if [ ! -d "$gitdir/rebase-merge" ] && [ ! -d "$gitdir/rebase-apply" ]; then
+    echo "$MSG_EDIT_COMMIT_OLD_REBASE_NOT_EDIT" >&2
+    exit 1
+  fi
 fi
 
 echo
