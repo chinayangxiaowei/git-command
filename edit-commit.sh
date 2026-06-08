@@ -165,6 +165,12 @@ if ! git merge-base --is-ancestor "$SHA" HEAD; then
   exit 1
 fi
 
+if ! git rev-parse --verify --quiet "${SHA}^" >/dev/null 2>&1; then
+  printf "$MSG_COMMON_ROOT_COMMIT_FMT" "$SHA" >&2
+  echo "$MSG_COMMON_ROOT_HINT" >&2
+  exit 1
+fi
+
 echo "$MSG_EDIT_COMMIT_OLD_HEADER"
 echo "$MSG_EDIT_COMMIT_OLD_NOTE_APPLIES"
 echo "$MSG_EDIT_COMMIT_OLD_NOTE_NOT_APPLIES"

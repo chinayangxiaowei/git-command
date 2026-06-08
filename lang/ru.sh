@@ -257,8 +257,8 @@ MSG_DROP_WHEN="Когда:      случайный commit (пароли / отл
 MSG_DROP_CONTRAST="Примечание: revert добавляет обратный commit (сохраняет историю); drop по-настоящему удаляет (переписывает историю)"
 MSG_DROP_DIRTY_TREE="В рабочем дереве есть незакоммиченные изменения; сначала сделай commit или stash."
 MSG_DROP_NOT_ANCESTOR_FMT='%s не в цепочке предков текущей ветки.\n'
-MSG_DROP_ROOT_COMMIT_FMT='%s — корневой commit, без родителя; rebase не может его удалить.\n'
-MSG_DROP_ROOT_HINT="Настоящее удаление корневого commit требует git update-ref и т.п.; делай вручную."
+MSG_COMMON_ROOT_COMMIT_FMT='%s — корневой commit (без родителя); эта операция не поддерживает корневой commit.\n'
+MSG_COMMON_ROOT_HINT="Подсказка: для правки корневого commit — git rebase -i --root; если HEAD == корень, git commit --amend."
 MSG_DROP_WILL_REMOVE="Будут удалены:"
 MSG_DROP_DOWNSTREAM_FMT='%d последующих commit будут переиграны (SHA изменятся):\n'
 MSG_DROP_DOWNSTREAM_HINT="  (если последующие изменения зависят от этого commit → авто-abort при конфликте)"

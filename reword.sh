@@ -23,6 +23,12 @@ if ! git merge-base --is-ancestor "$SHA" HEAD; then
   exit 1
 fi
 
+if ! git rev-parse --verify --quiet "${SHA}^" >/dev/null 2>&1; then
+  printf "$MSG_COMMON_ROOT_COMMIT_FMT" "$SHA" >&2
+  echo "$MSG_COMMON_ROOT_HINT" >&2
+  exit 1
+fi
+
 echo "$MSG_REWORD_OLD_MSG"
 git --no-pager log -1 --format='%B' "$SHA" | sed 's/^/  /'
 echo

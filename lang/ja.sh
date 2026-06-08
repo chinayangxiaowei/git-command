@@ -257,8 +257,8 @@ MSG_DROP_WHEN="場面: 誤った commit（パスワード / デバッグコー�
 MSG_DROP_CONTRAST="注意: revert は逆 commit を追加（history 保持）。drop は本当に削除（history を書き換え）。"
 MSG_DROP_DIRTY_TREE="作業ツリーに未コミットの変更があります。先に commit または stash してください。"
 MSG_DROP_NOT_ANCESTOR_FMT='%s は現在のブランチの祖先チェーンにありません。\n'
-MSG_DROP_ROOT_COMMIT_FMT='%s は root commit です。親を持たないため rebase では削除できません。\n'
-MSG_DROP_ROOT_HINT="root commit の本当の削除には git update-ref などが必要。手動で対応してください。"
+MSG_COMMON_ROOT_COMMIT_FMT='%s は root commit です (親なし); この操作は root commit をサポートしません。\n'
+MSG_COMMON_ROOT_HINT="ヒント: root commit を編集するには git rebase -i --root; HEAD == root なら git commit --amend も可。"
 MSG_DROP_WILL_REMOVE="削除対象:"
 MSG_DROP_DOWNSTREAM_FMT='%d 件の下流 commit が replay されます（SHA が変わります）:\n'
 MSG_DROP_DOWNSTREAM_HINT="  （下流の変更がこの commit に依存していると → conflict 時に自動 abort）"

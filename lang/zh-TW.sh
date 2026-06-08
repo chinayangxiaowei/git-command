@@ -257,8 +257,8 @@ MSG_DROP_WHEN="情境: 誤提交（密碼／除錯程式碼）/ 無用 WIP / 重
 MSG_DROP_CONTRAST="對比: revert 是加一條反向 commit（保留歷史）；drop 是真的刪掉（改寫歷史）"
 MSG_DROP_DIRTY_TREE="工作區有未提交的變更，請先 commit 或 stash。"
 MSG_DROP_NOT_ANCESTOR_FMT='%s 不在目前分支的祖先鏈上。\n'
-MSG_DROP_ROOT_COMMIT_FMT='%s 是根 commit，沒有父節點，rebase 無法移除。\n'
-MSG_DROP_ROOT_HINT="若真要刪除根 commit，需要 git update-ref 等手段，請手動處理。"
+MSG_COMMON_ROOT_COMMIT_FMT='%s 是根 commit (沒有父); 此操作不支援根 commit。\n'
+MSG_COMMON_ROOT_HINT="提示: 修改根 commit 可在指令列用 git rebase -i --root; 若 HEAD == root 也可用 git commit --amend。"
 MSG_DROP_WILL_REMOVE="將移除："
 MSG_DROP_DOWNSTREAM_FMT='下游 %d 條 commit 會被 replay（SHA 會改變）：\n'
 MSG_DROP_DOWNSTREAM_HINT="  （若下游變更依賴此 commit → 衝突時自動 abort）"

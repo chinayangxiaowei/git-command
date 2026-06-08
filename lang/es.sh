@@ -257,8 +257,8 @@ MSG_DROP_WHEN="Cuándo: commit accidental (contraseñas / código de debug) / WI
 MSG_DROP_CONTRAST="Nota:   revert agrega un commit inverso (conserva la historia); drop elimina de verdad (reescribe la historia)"
 MSG_DROP_DIRTY_TREE="El working tree tiene cambios sin commitear; haz commit o stash primero."
 MSG_DROP_NOT_ANCESTOR_FMT='%s no está en la cadena de ancestros de la branch actual.\n'
-MSG_DROP_ROOT_COMMIT_FMT='%s es el commit raíz, no tiene padre; rebase no puede eliminarlo.\n'
-MSG_DROP_ROOT_HINT="Eliminar realmente el commit raíz requiere git update-ref, etc.; hazlo manualmente."
+MSG_COMMON_ROOT_COMMIT_FMT='%s es el commit raíz (sin padre); esta operación no soporta el commit raíz.\n'
+MSG_COMMON_ROOT_HINT="Sugerencia: para editar el commit raíz usa git rebase -i --root; si HEAD == raíz, git commit --amend."
 MSG_DROP_WILL_REMOVE="Se eliminará:"
 MSG_DROP_DOWNSTREAM_FMT='Se reaplicarán %d commit(s) posteriores (los SHAs cambian):\n'
 MSG_DROP_DOWNSTREAM_HINT="  (si los cambios posteriores dependen de este commit → aborta automáticamente ante conflictos)"

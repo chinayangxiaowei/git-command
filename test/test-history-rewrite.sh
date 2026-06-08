@@ -336,6 +336,64 @@ else
 fi
 teardown_sb
 
+# ───────────────────────────────────────────────────────────────
+# Root-commit guard — 6 history-rewriting scripts must refuse cleanly
+# (they all dereference SHA^ or TARGET^ which is fatal on the root)
+# ───────────────────────────────────────────────────────────────
+echo
+echo "── root-commit guard ──"
+
+root_pat="(root commit|根 commit|root-commit|корневой commit|racine|raíz|raiz|root commit です|root commit입니다)"
+
+setup_sb
+ROOT=$(git rev-parse HEAD~2)
+out=$(printf 'x\nQ\n' | bash "$DIR/reword.sh" "$ROOT" 2>&1) && ec=0 || ec=$?
+[ "$ec" -ne 0 ] && echo "$out" | grep -qiE "$root_pat" \
+  && ok "reword refuses root commit" \
+  || fail_ "reword root ec=$ec out='${out:0:120}'"
+teardown_sb
+
+setup_sb
+ROOT=$(git rev-parse HEAD~2)
+out=$(printf 'y\ny\nx\nQ\nn\n' | bash "$DIR/edit-commit.sh" "$ROOT" 2>&1) && ec=0 || ec=$?
+[ "$ec" -ne 0 ] && echo "$out" | grep -qiE "$root_pat" \
+  && ok "edit-commit refuses root (old-path)" \
+  || fail_ "edit-commit root ec=$ec out='${out:0:120}'"
+teardown_sb
+
+setup_sb
+HEAD_SHA=$(git rev-parse HEAD)
+out=$(printf '3\nQ\ny\n' | bash "$DIR/squash-n.sh" "$HEAD_SHA" 2>&1) && ec=0 || ec=$?
+[ "$ec" -ne 0 ] && echo "$out" | grep -qiE "(ancestor|祖先|Vorfahr|ancêtre|ancestro|предок)" \
+  && ok "squash-n refuses n>=total (would include root)" \
+  || fail_ "squash-n n>=total ec=$ec out='${out:0:120}'"
+teardown_sb
+
+setup_sb
+SRC=$(git rev-parse HEAD)
+ROOT=$(git rev-parse HEAD~2)
+out=$(printf '%s\ny\n' "$ROOT" | bash "$DIR/commit-fixup-into.sh" "$SRC" 2>&1) && ec=0 || ec=$?
+[ "$ec" -ne 0 ] && echo "$out" | grep -qiE "$root_pat" \
+  && ok "commit-fixup-into refuses root target" \
+  || fail_ "cfix root ec=$ec out='${out:0:120}'"
+teardown_sb
+
+setup_sb
+ROOT=$(git rev-parse HEAD~2)
+out=$(printf 'y\n' | bash "$DIR/rebase-i.sh" "$ROOT" 2>&1) && ec=0 || ec=$?
+[ "$ec" -ne 0 ] && echo "$out" | grep -qiE "$root_pat" \
+  && ok "rebase-i refuses root commit" \
+  || fail_ "rebase-i root ec=$ec out='${out:0:120}'"
+teardown_sb
+
+setup_sb
+ROOT=$(git rev-parse HEAD~2)
+out=$(printf 'y\n' | bash "$DIR/drop-commit.sh" "$ROOT" 2>&1) && ec=0 || ec=$?
+[ "$ec" -ne 0 ] && echo "$out" | grep -qiE "$root_pat" \
+  && ok "drop-commit refuses root commit" \
+  || fail_ "drop-commit root ec=$ec out='${out:0:120}'"
+teardown_sb
+
 echo
 echo "── Total ──"
 echo "PASS: $pass   FAIL: $fail"

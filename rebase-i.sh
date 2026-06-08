@@ -21,5 +21,11 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
   exit 1
 fi
 
+if ! git rev-parse --verify --quiet "${SHA}^" >/dev/null 2>&1; then
+  printf "$MSG_COMMON_ROOT_COMMIT_FMT" "$SHA" >&2
+  echo "$MSG_COMMON_ROOT_HINT" >&2
+  exit 1
+fi
+
 confirm "$MSG_REBASE_I_CONTINUE"
 git rebase -i --autosquash "${SHA}^"

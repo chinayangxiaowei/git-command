@@ -26,8 +26,8 @@ if ! [[ "$n" =~ ^[0-9]+$ ]] || (( n < 2 )); then
 fi
 
 total="$(git rev-list --count "$SHA")"
-if (( n > total )); then
-  printf "$MSG_SQUASH_TOO_MANY_FMT" "$total" "$total" >&2
+if (( n >= total )); then
+  printf "$MSG_SQUASH_TOO_MANY_FMT" "$total" "$((total - 1))" >&2
   exit 1
 fi
 

@@ -257,8 +257,8 @@ MSG_DROP_WHEN="Quand : commit accidentel (mots de passe / code de debug) / WIP i
 MSG_DROP_CONTRAST="Note : revert ajoute un commit inverse (garde l’historique) ; drop retire vraiment (réécrit l’historique)"
 MSG_DROP_DIRTY_TREE="L’arbre de travail a des modifications non commitées ; commit ou stash d’abord."
 MSG_DROP_NOT_ANCESTOR_FMT='%s n’est pas dans la chaîne d’ancêtres de la branche courante.\n'
-MSG_DROP_ROOT_COMMIT_FMT='%s est le commit racine, sans parent ; rebase ne peut pas le retirer.\n'
-MSG_DROP_ROOT_HINT="Retirer vraiment le commit racine demande git update-ref etc. ; à faire manuellement."
+MSG_COMMON_ROOT_COMMIT_FMT='%s est le commit racine (sans parent) ; cette opération ne supporte pas le commit racine.\n'
+MSG_COMMON_ROOT_HINT="Astuce : pour modifier le commit racine, utilisez git rebase -i --root ; si HEAD == racine, git commit --amend."
 MSG_DROP_WILL_REMOVE="Sera retiré :"
 MSG_DROP_DOWNSTREAM_FMT='%d commit(s) en aval rejoueront (les SHA changent) :\n'
 MSG_DROP_DOWNSTREAM_HINT="  (si des changements en aval dépendent de ce commit → auto-abort en cas de conflit)"

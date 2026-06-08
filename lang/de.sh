@@ -257,8 +257,8 @@ MSG_DROP_WHEN="Wann:  versehentlicher commit (Passwörter / Debug-Code) / sinnlo
 MSG_DROP_CONTRAST="Hinweis: revert fügt einen inversen commit hinzu (behält History); drop entfernt wirklich (schreibt History um)"
 MSG_DROP_DIRTY_TREE="Arbeitsverzeichnis enthält uncommittete Änderungen; zuerst committen oder stashen."
 MSG_DROP_NOT_ANCESTOR_FMT='%s liegt nicht in der Vorfahrenkette des aktuellen branches.\n'
-MSG_DROP_ROOT_COMMIT_FMT='%s ist der root-commit, hat keinen parent; rebase kann ihn nicht entfernen.\n'
-MSG_DROP_ROOT_HINT="Den root-commit wirklich zu entfernen erfordert git update-ref etc.; manuell durchführen."
+MSG_COMMON_ROOT_COMMIT_FMT='%s ist der root-commit (kein parent); diese Operation unterstützt root-commits nicht.\n'
+MSG_COMMON_ROOT_HINT="Hinweis: root-commit zu ändern, nutze git rebase -i --root; bei HEAD == root auch git commit --amend."
 MSG_DROP_WILL_REMOVE="Wird entfernt:"
 MSG_DROP_DOWNSTREAM_FMT='%d nachfolgende commit(s) werden neu abgespielt (SHAs ändern sich):\n'
 MSG_DROP_DOWNSTREAM_HINT="  (wenn nachfolgende Änderungen von diesem commit abhängen → automatischer abort bei Konflikt)"

@@ -52,6 +52,12 @@ if ! git merge-base --is-ancestor "$TARGET_FULL" "$SRC_FULL"; then
   exit 1
 fi
 
+if ! git rev-parse --verify --quiet "${TARGET_FULL}^" >/dev/null 2>&1; then
+  printf "$MSG_COMMON_ROOT_COMMIT_FMT" "$TARGET_INPUT" >&2
+  echo "$MSG_COMMON_ROOT_HINT" >&2
+  exit 1
+fi
+
 SRC_SHORT="$(git rev-parse --short "$SRC_FULL")"
 TGT_SHORT="$(git rev-parse --short "$TARGET_FULL")"
 
