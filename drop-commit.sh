@@ -85,7 +85,7 @@ chmod +x "$tmpdir/seq"
 export GIT_SEQUENCE_EDITOR="$tmpdir/seq"
 export DROP_SHA="$SHA_FULL"
 
-git -c core.abbrev=40 rebase -i "${SHA_FULL}^"
+run_or_abort rebase git -c core.abbrev=40 rebase -i "${SHA_FULL}^"
 
 echo
 echo "$MSG_DROP_DONE_REBASE"

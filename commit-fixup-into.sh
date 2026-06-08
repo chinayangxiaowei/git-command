@@ -107,7 +107,7 @@ export GIT_SEQUENCE_EDITOR="$tmpdir/seq"
 export SRC_SHA="$SRC_FULL"
 export TGT_SHA="$TARGET_FULL"
 
-git -c core.abbrev=40 rebase -i "${TARGET_FULL}^"
+run_or_abort rebase git -c core.abbrev=40 rebase -i "${TARGET_FULL}^"
 
 echo
 echo "$MSG_CFIX_DONE"
