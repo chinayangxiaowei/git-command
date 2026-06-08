@@ -56,6 +56,15 @@ main() {
   local container rel_path abs_path
   container=$(cd "$(git rev-parse --git-common-dir)/.." && pwd)
 
+  # Note on the pre-existence checks below (path / branch):
+  # They are UX optimizations to produce a friendly i18n error in the
+  # common case (user re-runs the same command). They are NOT race-safe;
+  # there is a tiny TOCTOU window between check and `git worktree add`.
+  # Safety against the race is provided by git itself: `git worktree add`
+  # creates the path via an atomic mkdir and rejects an existing branch,
+  # so a concurrent creation makes git fail cleanly with `set -e`
+  # propagating its non-zero exit. No data is at risk; the only cost is
+  # git's English error message instead of our localized one.
   if [ "$purpose" = "review" ]; then
     rel_path="review/$short_sha"
     abs_path="$container/$rel_path"
