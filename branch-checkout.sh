@@ -10,6 +10,7 @@ show_intro "$MSG_BRANCH_CHECKOUT_TITLE" \
   "$MSG_BRANCH_CHECKOUT_NOTE"
 
 print_header "$SHA"
+require_clean_state
 
 if ! git diff --quiet || ! git diff --cached --quiet; then
   echo "$MSG_BRANCH_CHECKOUT_DIRTY_TREE" >&2
