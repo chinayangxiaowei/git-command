@@ -36,7 +36,7 @@ done < <(git worktree list)
 
 if [ "${#items[@]}" -eq 0 ]; then
   printf "$MSG_WT_RM_EMPTY_FMT" "$purpose"
-  exit 0
+  exit_ok
 fi
 
 printf "$MSG_WT_RM_LIST_HEADER_FMT" "$purpose"
@@ -50,7 +50,7 @@ name="${name## }"; name="${name%% }"
 name="${name#  }"; name="${name#  }"
 if [ -z "$name" ]; then
   echo "$MSG_WT_RM_NO_INPUT"
-  exit 0
+  exit_ok
 fi
 
 found=no

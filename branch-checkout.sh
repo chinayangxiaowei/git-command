@@ -24,7 +24,7 @@ done < <(git branch --points-at "$SHA" --format='%(refname:short)')
 
 if [ "${#branches[@]}" -eq 0 ]; then
   echo "$MSG_BRANCH_CHECKOUT_NONE"
-  exit 0
+  exit_ok
 fi
 
 current="$(git rev-parse --abbrev-ref HEAD)"
@@ -44,7 +44,7 @@ else
   name="${name// /}"
   if [ -z "$name" ]; then
     echo "$MSG_BRANCH_CHECKOUT_NO_INPUT"
-    exit 0
+    exit_ok
   fi
   if [[ "$name" =~ ^[0-9]+$ ]] && [ "$name" -ge 1 ] && [ "$name" -le "${#branches[@]}" ]; then
     name="${branches[$((name-1))]}"
@@ -62,7 +62,7 @@ fi
 
 if [ "$name" = "$current" ]; then
   printf "$MSG_BRANCH_CHECKOUT_ALREADY_FMT" "$name"
-  exit 0
+  exit_ok
 fi
 
 git switch "$name"

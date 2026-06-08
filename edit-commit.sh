@@ -123,7 +123,7 @@ if [[ "$HEAD_SHA" == "$TARGET_SHA" ]]; then
   if (( ! have_msg && ! have_staged )); then
     echo
     echo "$MSG_EDIT_COMMIT_NO_CHANGES"
-    exit 0
+    exit_ok
   fi
 
   if ! git diff --quiet; then

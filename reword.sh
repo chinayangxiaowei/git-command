@@ -31,13 +31,13 @@ echo "$MSG_REWORD_NEW_MSG_PROMPT"
 new_msg=""
 while IFS= read -er line; do
   [[ "$line" == "Q" ]] && break
-  [[ "$line" == ":q" ]] && { echo "$MSG_REWORD_CANCELLED"; exit 0; }
+  [[ "$line" == ":q" ]] && { echo "$MSG_REWORD_CANCELLED"; exit_ok; }
   new_msg+="${line}"$'\n'
 done
 
 if [[ -z "$new_msg" ]]; then
   echo "$MSG_REWORD_EMPTY_CANCELLED"
-  exit 0
+  exit_ok
 fi
 
 tmpdir="$(mktemp -d)"

@@ -24,7 +24,7 @@ read -erp "$MSG_TAG_DELETE_NAME_PROMPT" name
 name="${name// /}"
 if [[ -z "$name" ]]; then
   echo "$MSG_TAG_DELETE_NO_INPUT"
-  exit 0
+  exit_ok
 fi
 
 if ! git rev-parse --verify --quiet "refs/tags/$name" >/dev/null 2>&1; then

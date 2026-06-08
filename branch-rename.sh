@@ -18,7 +18,7 @@ done < <(git branch --points-at "$SHA" --format='%(refname:short)')
 
 if [ "${#branches[@]}" -eq 0 ]; then
   echo "$MSG_BRANCH_RENAME_NONE"
-  exit 0
+  exit_ok
 fi
 
 if [ "${#branches[@]}" -eq 1 ]; then
@@ -36,7 +36,7 @@ else
   old_name="${old_name// /}"
   if [ -z "$old_name" ]; then
     echo "$MSG_BRANCH_RENAME_NO_INPUT"
-    exit 0
+    exit_ok
   fi
   if [[ "$old_name" =~ ^[0-9]+$ ]] && [ "$old_name" -ge 1 ] && [ "$old_name" -le "${#branches[@]}" ]; then
     old_name="${branches[$((old_name-1))]}"
@@ -56,7 +56,7 @@ read -erp "$MSG_BRANCH_RENAME_NEW_NAME_PROMPT" new_name
 new_name="${new_name// /}"
 if [ -z "$new_name" ]; then
   echo "$MSG_BRANCH_RENAME_NO_INPUT"
-  exit 0
+  exit_ok
 fi
 
 if ! git check-ref-format --branch "$new_name" >/dev/null 2>&1; then

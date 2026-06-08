@@ -46,10 +46,21 @@ confirm() {
   read -rp "$prompt [y/N] " ans
   if [[ ! "$ans" =~ ^[yY] ]]; then
     echo "已取消。"
-    # User-initiated cancellation is a successful exit, not a failure —
-    # this lets Zed's hide:on_success collapse the pane normally.
-    exit 0
+    # User cancelled before any work happened — short-circuit the EXIT
+    # trap so the pane closes immediately (no "press Enter" needed) AND
+    # Zed's hide:on_success collapses it (because we still exit 0).
+    exit_ok
   fi
+}
+
+# Successful no-op exit: pane closes immediately without prompting the
+# user to press Enter. Use this wherever the script bails out before
+# doing real work — empty input, ':q' in a message editor, "no branches
+# at this commit", "already on target branch", etc. The user didn't see
+# anything they need to acknowledge.
+exit_ok() {
+  _GIT_CMD_DONE=1
+  exit 0
 }
 
 # 拒绝在已有未完成的 rebase/cherry-pick/revert/merge 状态下运行

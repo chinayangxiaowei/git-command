@@ -19,7 +19,7 @@ done < <(git branch --points-at "$SHA" --format='%(refname:short)')
 
 if [ "${#branches[@]}" -eq 0 ]; then
   echo "$MSG_BRANCH_DELETE_NONE"
-  exit 0
+  exit_ok
 fi
 
 current="$(git rev-parse --abbrev-ref HEAD)"
@@ -39,7 +39,7 @@ else
   name="${name// /}"
   if [ -z "$name" ]; then
     echo "$MSG_BRANCH_DELETE_NO_INPUT"
-    exit 0
+    exit_ok
   fi
   # 编号 → 分支名
   if [[ "$name" =~ ^[0-9]+$ ]] && [ "$name" -ge 1 ] && [ "$name" -le "${#branches[@]}" ]; then

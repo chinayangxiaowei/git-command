@@ -31,7 +31,7 @@ read -erp "$MSG_CFIX_TARGET_PROMPT" TARGET_INPUT
 TARGET_INPUT="${TARGET_INPUT// /}"
 if [[ -z "$TARGET_INPUT" ]]; then
   echo "$MSG_CFIX_NO_INPUT"
-  exit 0
+  exit_ok
 fi
 
 TARGET_FULL="$(git rev-parse --verify --quiet "$TARGET_INPUT" 2>/dev/null || true)"

@@ -44,7 +44,7 @@ if (( has_unstaged )); then
     git add -A
   elif (( ! has_staged )); then
     echo "$MSG_FIXUP_EMPTY_INDEX"
-    exit 0
+    exit_ok
   fi
 fi
 
@@ -56,7 +56,7 @@ printf "$MSG_FIXUP_TARGET_FMT" "$target_short" "$target_msg"
 read -erp "$MSG_FIXUP_CONFIRM" ans
 if [[ "$ans" =~ ^[nN] ]]; then
   echo "$MSG_FIXUP_CANCELLED"
-  exit 0
+  exit_ok
 fi
 
 git commit --fixup="$SHA" --quiet

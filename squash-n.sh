@@ -40,7 +40,7 @@ echo "$MSG_SQUASH_MSG_PROMPT"
 new_msg=""
 while IFS= read -er line; do
   [[ "$line" == "Q" ]] && break
-  [[ "$line" == ":q" ]] && { echo "$MSG_SQUASH_CANCELLED"; exit 0; }
+  [[ "$line" == ":q" ]] && { echo "$MSG_SQUASH_CANCELLED"; exit_ok; }
   new_msg+="${line}"$'\n'
 done
 
